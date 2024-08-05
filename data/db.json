@@ -1,0 +1,51 @@
+{
+  "login": [
+    {
+      "id": "1",
+      "username": "abc",
+      "password": "12345",
+      "email": "user@example.com",
+      "role": "user",
+      "token": "user-token",
+      "name": "User Name"
+    },
+    {
+      "id": "2",
+      "username": "admin",
+      "password": "admin123",
+      "email": "admin@example.com",
+      "role": "admin",
+      "token": "admin-token",
+      "name": "Admin Name"
+    },
+    {
+      "id": "3",
+      "username": "seller",
+      "password": "seller123",
+      "email": "seller@example.com",
+      "role": "seller",
+      "token": "seller-token",
+      "name": "Seller Name"
+    },
+    {
+      "id": "a9bf",
+      "email": "abc",
+      "password": "12345"
+    },
+    {
+      "id": "7762",
+      "email": "abc",
+      "password": "12345"
+    },
+    {
+      "id": "61f9",
+      "email": "abc",
+      "password": "17364"
+    },
+    {
+      "id": "f1c4",
+      "email": "dksjd",
+      "password": "1738273"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+/* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root {
+  --font: 'DM Sans', sans-serif;
+  --color-one: #f45678;
+  --color-two: #b2dab8;
+  --color-three: #326e51;
+  --color-four: #efefef;
+}
+
+* {
+  /* font-family: 'DM Sans', sans-serif; */
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 1250px !important;
+  margin: 0 auto;
+}
+
+a {
+  text-decoration: none;
+} /*# sourceMappingURL=global.css.map */
