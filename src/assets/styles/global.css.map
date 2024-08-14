@@ -1,10 +1,1 @@
-{
-  "version": 3,
-  "sources": [
-    "global.scss",
-    "global.css"
-  ],
-  "names": [],
-  "mappings": "AAAQ,+HAAA;AAER;EACE,6BAAA;EACA,oBAAA;ACAF;;ADGA;EACE,kCAAA;EACA,sBAAA;ACAF;;ADGA;EACE,WAAA;EACA,iBAAA;EACA,cAAA;ACAF;;ADGA;EACE,qBAAA;ACAF",
-  "file": "global.css"
-}
+{"version":3,"sources":["global.scss","global.css"],"names":[],"mappings":"AAAQ,+HAAA;AAER;EACE,6BAAA;EACA,oBAAA;ACAF;;ADGA;EACE,kCAAA;EACA,sBAAA;ACAF;;ADGA;EACE,WAAA;EACA,iBAAA;EACA,cAAA;ACAF;;ADGA;EACE,qBAAA;ACAF","file":"global.css"}

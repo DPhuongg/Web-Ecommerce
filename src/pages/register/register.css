@@ -9,8 +9,8 @@
 
 .register {
   display: flex;
-  width: 70%;
-  height: 85vh;
+  width: 60%;
+  height: 75vh;
   background-color: white;
   box-shadow: 0 0 15px 5px rgba(188, 188, 188, 0.8);
   border-radius: 10px;
@@ -26,18 +26,28 @@
 }
 .register__content {
   width: 50%;
-  padding-left: 35px;
+  padding-left: 45px;
 }
 .register__title {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
   color: #242424;
-  margin: 20px 0 30px 0;
+  margin: 20px 0 35px 0;
+}
+.register__box .register__wrap {
+  margin-right: 10px;
+  font-size: 16px;
+  display: inline;
+}
+.register__box input {
+  margin-right: 5px;
+  width: 20px;
+  margin-top: 15px;
 }
 
 label {
   display: block;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 500;
   color: #696969;
   margin: 0;
@@ -51,6 +61,7 @@ input {
   padding: 10px 0;
   width: 80%;
   outline: none;
+  font-size: 14px;
 }
 input:hover {
   border-bottom: 2px solid #343434;
@@ -70,7 +81,7 @@ form {
   background-color: #f45678;
   color: white;
   border: 1px solid #f45678;
-  width: 200px;
+  width: 150px;
 }
 .button--one:hover {
   background-color: white;
@@ -84,7 +95,7 @@ form {
   background: none;
   font-size: 20px;
   color: #f45678;
-  margin-left: 80px;
+  margin-left: 60px;
   transition: box-shadow 0.3s ease;
 }
 .button--two:hover {

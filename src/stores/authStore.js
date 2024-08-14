@@ -45,8 +45,6 @@ export const useAuthStore = defineStore({
         router.push({ path: `/${role}/home` });
       } catch (error) {
         const status = error.response.status;
-
-        // console.log(status);
         if (status === 400) {
           Swal.fire({
             icon: 'error',

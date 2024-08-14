@@ -50,7 +50,7 @@ onMounted(async () => {
   error.value = store.error;
   await store.fetchProducts();
   products.value = store.products;
-  console.log(products);
+  // console.log(products);
   isLoading.value = store.isLoading;
   error.value = store.error;
 });

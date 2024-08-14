@@ -1,43 +1,46 @@
 <template>
-  <div class="flex items-center justify-center">
-    <div class="warehouseDetail bg-[#ffff] p-3 flex w-[70%] justify-between">
-      <div class="w-[45%] flex justify-center items-center relative overflow-hidden">
-        <!-- <video autoplay muted loop class="w-full h-full top-[-10%] left-0 absolute">
-          <source src="@/assets/videos/Warehouse.mp4" type="video/mp4" />
-        </video> -->
-        <img src="@/assets/images/warehouse_1.png" class="w-full h-[400px] object-cover" />
-      </div>
+  <div class="container flex flex-col bg-[#ffff] items-center w-[50%] p-4 rounded-lg">
+    <div class="w-[50%]">
+      <img src="@/assets/images/warehouse_2.png" class="object-cover w-full h-auto" />
+    </div>
+    <div class="w-[90%] p-4">
+      <h1 class="text-[22px] font-semibold mb-5 mt-2">Thêm mới kho hàng</h1>
+      <form @submit.prevent="handleSubmit">
+        <label for="name">Tên kho</label>
+        <input class="w-[45%]" id="name" v-model="form.name" type="text" placeholder="Kho A..." />
 
-      <div class="w-[50%] p-5">
-        <h1 class="text-[23px] font-semibold mb-5">Thêm mới kho hàng</h1>
-        <form @submit.prevent="handleSubmit">
-          <div>
-            <label for="name">Tên kho</label>
-            <input type="text" v-model="form.name" id="name" required placeholder="Kho A..." />
-          </div>
-          <div>
+        <div class="flex justify-between">
+          <div class="w-[45%]">
             <label for="country">Quốc gia</label>
-            <input type="text" v-model="form.country" id="country" required placeholder="Việt Nam..." />
+            <input class="w-full" id="country" v-model="form.country" type="text" placeholder="Việt Nam..." />
           </div>
-          <div>
+
+          <div class="w-[45%]">
             <label for="province">Tỉnh / Thành phố</label>
-            <input type="text" v-model="form.province" id="province" required placeholder="Hà Nội..." />
+            <input class="w-full" id="province" v-model="form.province" type="text" placeholder="Hà Nội.." />
           </div>
-          <div>
-            <label for="district">Huyện</label>
-            <input type="text" v-model="form.district" id="district" required placeholder="Hoài Đức..." />
+        </div>
+
+        <div class="flex justify-between">
+          <div class="w-[45%]">
+            <label for="district">Huyện / Quận</label>
+            <input class="w-full" id="district" v-model="form.district" type="text" placeholder="Hoàng Mai.." />
           </div>
-          <div>
-            <label for="commune">Xã</label>
-            <input type="text" v-model="form.commune" id="commune" required placeholder="Abc..." />
+
+          <div class="w-[45%]">
+            <label for="commune">Xã / Phường</label>
+            <input class="w-full" id="commune" v-model="form.commune" type="text" placeholder="Đại Kim.." />
           </div>
-          <div>
-            <label for="address_detail">Địa chỉ chi tiết</label>
-            <input type="text" v-model="form.address_detail" id="address_detail" required placeholder="Số nhà, Ngõ, ......" />
-          </div>
-          <button class=" button text-[17px] font-medium w-[90%] bg-[#69C3A3] text-[#fff] rounded-xl p-1 mt-2" type="submit">Thêm mới</button>
-        </form>
-      </div>
+        </div>
+
+        <label for="address_detail">Địa chỉ chi tiết</label>
+        <input class="w-full" id="address_detail" v-model="form.address_detail" type="text" placeholder="Số nhà.., Ngõ..." />
+
+        <!-- Nút button -->
+        <button class="button text-[17px] font-medium w-[40%] bg-[#69C3A3] text-[#fff] rounded-xl p-1 mt-6" type="submit">Thêm mới</button>
+      </form>
+
+      <button @click="handleBack" class="text-[17px] text-[#69C3A3] font-medium underline ml-[40%]">Quay lại</button>
     </div>
   </div>
 </template>
@@ -45,6 +48,7 @@
 <script setup>
 import { reactive } from 'vue';
 import { useWarehouseStore } from '@/stores/warehouseStore';
+import router from '@/router/index.js';
 
 const warehouseStore = useWarehouseStore();
 
@@ -58,10 +62,12 @@ const form = reactive({
 });
 
 const handleSubmit = () => {
-  console.log('Trước khi gửi lên server')
-  console.log(form);
   warehouseStore.addWarehouse(form);
-}
+};
+
+const handleBack = () => {
+  router.push({ name: 'menu-10' });
+};
 </script>
 
 <style scoped lang="scss">

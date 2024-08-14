@@ -40,7 +40,7 @@
         </button>
       </div>
     </div>
-    <TableCategory :input-value="inputValue" :category-id="selectedCategoryId" :refresh="refresh" :input-search="inputSearch"></TableCategory>
+    <TableCategory :input-value="inputValue" :category-id="selectedCategoryId" :refresh="refresh" :input-search="inputSearch" :index="key"></TableCategory>
   </div>
 </template>
 
@@ -60,6 +60,8 @@ const show = ref(false);
 const selectedCategoryId = ref(null);
 const refresh = ref(false);
 const inputSearch = ref('');
+
+const key = ref('');
 
 const handleAddNew = async () => {
   const { value: text } = await Swal.fire({

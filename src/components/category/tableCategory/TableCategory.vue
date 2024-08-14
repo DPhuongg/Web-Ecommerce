@@ -83,21 +83,11 @@ const fetchData = async (page = 1, pageSize = 10) => {
   try {
     const response = await apiServices.getAllCategory();
     let allData = response.data.data.map((item, index) => {
-      const createdAt = new Date(item.createdAt[0], item.createdAt[1] - 1, ...item.createdAt.slice(2));
-      const modifiedAt = new Date(
-        item.modifiedAt[0],
-        item.modifiedAt[1] - 1,
-        item.modifiedAt[2],
-        item.modifiedAt[3],
-        item.modifiedAt[4],
-        item.modifiedAt[5]
-      );
-
       return {
         stt: index + 1,
         ...item,
-        createdAt: format(createdAt, 'dd/MM/yyyy'),
-        modifiedAt: format(modifiedAt, 'dd/MM/yyyy HH:mm:ss')
+        createdAt: format(item.createdAt, 'dd/MM/yyyy'),
+        modifiedAt: format(item.modifiedAt, 'dd/MM/yyyy HH:mm:ss')
       };
     });
 
@@ -220,16 +210,12 @@ const handleCategoryIdChange = async (newId) => {
   try {
     const response = await apiServices.getCategory(newId);
     const item = response.data.data;
-    console.log(item);
-
-    const createdAt = new Date(item.createdAt[0], item.createdAt[1] - 1, ...item.createdAt.slice(2));
-    const modifiedAt = new Date(item.modifiedAt[0], item.modifiedAt[1] - 1, ...item.modifiedAt.slice(2));
 
     const formattedData = {
       stt: 1,
       ...item,
-      createdAt: format(createdAt, 'dd/MM/yyyy'),
-      modifiedAt: format(modifiedAt, 'dd/MM/yyyy HH:mm:ss')
+      createdAt: format(item.createdAt, 'dd/MM/yyyy'),
+      modifiedAt: format(item.modifiedAt, 'dd/MM/yyyy HH:mm:ss')
     };
     pagination.total = formattedData.length;
     data.value = [formattedData];

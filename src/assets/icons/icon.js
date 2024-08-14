@@ -23,6 +23,9 @@ import TrashIcon from './trash.svg';
 import EditIcon from './edit.svg';
 import CheckIcon from './check.svg';
 import CloseIcon from './close.svg';
+import AdminIcon from './admin.svg';
+import OrderIcon from './order.svg';
+import EyeIcon from './eye.svg';
 
 export {
   CartIcon,
@@ -49,5 +52,8 @@ export {
   TrashIcon,
   EditIcon,
   CheckIcon,
-  CloseIcon
+  CloseIcon,
+  AdminIcon,
+  OrderIcon,
+  EyeIcon
 };

@@ -12,7 +12,7 @@ const login = [
   {
     path: '/login/admin',
     name: 'HomeAdmin',
-    component: () => import('../pages/login/LoginViewAdmin.vue')
+    component: () => import('../pages/login/loginAdmin/LoginViewAdmin.vue')
   },
   {
     path: '/login/forgotPassword',

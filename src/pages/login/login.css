@@ -47,7 +47,7 @@
   text-align: center;
 }
 .login__content {
-  margin-top: 20px;
+  margin-top: 43px;
   margin-bottom: 20px;
   font-size: 18px;
   color: #696969;
@@ -67,6 +67,10 @@
 }
 .login__boxTwo input {
   margin-right: 5px;
+}
+.login__check {
+  color: red;
+  font-size: 14px;
 }
 .login__select {
   display: flex;
@@ -101,7 +105,7 @@
 .button--one {
   background-color: #f45678;
   color: #fff;
-  margin-top: 15px;
+  margin-top: 30px;
   width: 90%;
   transition: box-shadow 0.3s ease;
 }
@@ -117,7 +121,9 @@
 }
 
 label {
+  display: inline-block;
   font-size: 16px;
   font-weight: 400;
   color: #696969;
+  margin-bottom: 10px;
 }/*# sourceMappingURL=login.css.map */

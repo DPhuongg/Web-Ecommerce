@@ -31,7 +31,7 @@
 
       <div class="login__items--two">
         <div>
-          <h3>Welcome to login, user !</h3>
+          <h3>Welcome to login!</h3>
           <h4>Don't have an account?</h4>
           <button class="button button--two" @click="handleSignUpClick">Sign up</button>
         </div>

@@ -8,11 +8,6 @@ const home = [
         name: 'Home user',
         component: () => import('../pages/Home/User/HomeUserView.vue')
       },
-      {
-        path: 'admin',
-        name: 'Home admin',
-        component: () => import('../pages/Home/Admin/HomeAdminView.vue')
-      },
     ]
   }
 ];

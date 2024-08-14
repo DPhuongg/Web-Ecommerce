@@ -55,7 +55,6 @@ import { SearchIcon, BarIcon, BellIcon } from '@/assets/icons/icon.js';
 import Dropdown from '@/components/dropdown/DropDown.vue';
 import router from '@/router/index.js';
 
-
 const collapsed = ref(false);
 const toggleCollapsed = () => {
   collapsed.value = !collapsed.value;
@@ -89,7 +88,7 @@ const items = reactive([
     key: '2',
     icon: () => h(DesktopOutlined),
     label: 'Quản lý danh mục',
-    title: 'Option 2'
+    title: 'Quản lý danh mục'
   },
   {
     key: '3',
@@ -166,6 +165,16 @@ const items = reactive([
         key: '11',
         label: 'Thêm mới kho hàng',
         title: 'Thêm mới kho hàng'
+      },
+      {
+        key: '15',
+        label: 'Thống kê xuất hàng',
+        title: 'Thống kê xuất hàng'
+      },
+      {
+        key: '16',
+        label: 'Thống kê nhập hàng',
+        title: 'Thống kê nhập hàng'
       }
     ]
   },

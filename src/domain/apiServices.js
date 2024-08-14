@@ -38,7 +38,7 @@ export default {
     return httpAuth.post(config.baseApiUrl + '/categories', { name: name, status: true });
   },
   getCategory(id) {
-    console.log(httpAuth.get(`${config.baseApiUrl}/categories/${id}`));
+    // console.log(httpAuth.get(`${config.baseApiUrl}/categories/${id}`));
     return httpAuth.get(`${config.baseApiUrl}/categories/${id}`);
   },
 
@@ -66,5 +66,30 @@ export default {
   },
   addWarehouse(newWarehouse) {
     return httpAuth.post(config.baseApiUrl + '/api/v1/warehouse', newWarehouse);
+  },
+  getDetailWarehouse(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/warehouse/${id}`);
+  },
+  updateWarehouse(id, newWarehouse) {
+    return httpAuth.put(`${config.baseApiUrl}/api/v1/warehouse/${id}`, newWarehouse);
+  },
+
+  //ADMIN
+  getListSeller(page, size) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/admin/sellers?page=${page - 1}&size=${size}`);
+  },
+  getDetailSeller(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/admin/sellers/${id}`);
+  },
+
+  getListUser(page, size) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/admin/users?page=${page - 1}&size=${size}`);
+  },
+  getDetailUser(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/admin/users/${id}`);
+  },
+  addUser(newUser){
+    return httpAuth.post(config.baseApiUrl + '/api/v1/admin/users/add', newUser);
   }
+
 };

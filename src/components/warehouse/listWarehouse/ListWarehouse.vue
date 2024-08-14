@@ -35,9 +35,11 @@
               <TrashIcon class="w-[15px] h-[15px]"></TrashIcon>
             </a>
           </span>
-          <span v-else-if="column.key === 'createdAt' || column.key === 'modifiedAt'">
-            {{ formatDate(record[column.dataIndex]) }}
+          <span v-else-if="column.key === 'created_at' || column.key === 'modified_at'">
+            <!-- {{ format(record[column.dataIndex], 'dd/MM/yyyy HH:mm:ss') }} -->
+            {{ record[column.dataIndex] ? format(parseISO(record[column.dataIndex]), 'dd/MM/yyyy HH:mm') : 'N/A' }}
           </span>
+
           <span v-else>
             {{ record[column.dataIndex] }}
           </span>
@@ -50,19 +52,24 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { SearchIcon, AddIcon, EditIcon, TrashIcon } from '@/assets/icons/icon.js';
-import { formatDate } from '@/utils/formatDate.js';
+import { format, parseISO } from 'date-fns';
 import { useWarehouseStore } from '@/stores/warehouseStore';
 import router from '@/router/index.js';
 
 const warehouseStore = useWarehouseStore();
-
+// const warehouseData = computed(() => ({
+//   dataSource: warehouseStore.sellers,
+//   totalElements: warehouseStore.totalElements,
+//   currentPage: warehouseStore.currentPage,
+//   pageSize: warehouseStore.pageSize
+// }));
 const dataSource = computed(() => warehouseStore.warehouses);
 
 const columns = [
   { title: 'STT', dataIndex: 'stt', key: 'stt' },
   { title: 'Name', dataIndex: 'name', key: 'name' },
-  { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' },
-  { title: 'Modified At', dataIndex: 'modifiedAt', key: 'modifiedAt' },
+  { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
+  { title: 'Modified At', dataIndex: 'modified_at', key: 'modified_at' },
   { title: 'Actions', key: 'actions' }
 ];
 
@@ -75,8 +82,7 @@ const deleteWarehouse = (id) => {
 };
 
 const editWarehouse = (id) => {
-  console.log(id);
-  router.push({ name: 'view-warehouseDetail' });
+  warehouseStore.detailWarehouse(id);
 };
 
 const handleAddNew = () => {
