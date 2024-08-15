@@ -73,6 +73,12 @@ const seller = [
         path: 'export-supply',
         name: 'menu-15',
         component: () => import('../components/supply/listExport/ListExport.vue')
+      },
+
+      {
+        path: 'create-product',
+        name: 'menu-5',
+        component: () => import('../components/productSeller/createProduct/CreateProduct.vue')
       }
     ]
   }

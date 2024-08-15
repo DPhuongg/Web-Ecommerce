@@ -57,8 +57,8 @@ export default {
   },
 
   //WAREHOUSE
-  getAllWarehouse() {
-    return httpAuth.get(config.baseApiUrl + '/api/v1/warehouse');
+  getAllWarehouse(page, size, searchQuery) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/warehouse?page=${page - 1}&size=${size}&name=${searchQuery}`);
   },
   deleteWarehouse(id) {
     // console.log(`${config.baseApiUrl}/api/v1/warehouse/${id}`);
@@ -88,8 +88,13 @@ export default {
   getDetailUser(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/admin/users/${id}`);
   },
-  addUser(newUser){
+  addUser(newUser) {
     return httpAuth.post(config.baseApiUrl + '/api/v1/admin/users/add', newUser);
-  }
+  },
 
+
+  //SUPPLY
+  getAllExport(page, size, searchName, searchId) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/inventory/export?page=${page - 1}&size=${size}&skuCode=${searchId}&name=${searchName}`);
+  }
 };

@@ -58,11 +58,12 @@ const warehouseStore = useWarehouseStore();
 const formDetail = computed(() => warehouseStore.detail);
 
 const submitForm = () => {
-  console.log(formDetail.value);
+  // console.log(formDetail.value);
   warehouseStore.updateWarehouse(id, formDetail.value);
 };
 
 const handleBack = () => {
+  warehouseStore.currentPage = 1;
   router.push({ name: 'menu-10' });
 };
 

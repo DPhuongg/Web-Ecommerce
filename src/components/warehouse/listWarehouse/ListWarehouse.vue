@@ -24,7 +24,16 @@
     </div>
 
     <div>
-      <a-table :columns="columns" :data-source="dataSource" row-key="id" @change="handleTableChange">
+      <a-table
+        :columns="columns"
+        :data-source="warehouseData.dataSource"
+        :pagination="{
+          total: warehouseData.totalElements,
+          current: warehouseData.currentPage,
+          pageSize: warehouseData.pageSize
+        }"
+        @change="handleTableChange"
+      >
         <template #bodyCell="{ column, record }">
           <span v-if="column.key === 'actions'" class="flex">
             <a href="#" @click.prevent="editWarehouse(record.id)" class="mr-4">
@@ -50,20 +59,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { SearchIcon, AddIcon, EditIcon, TrashIcon } from '@/assets/icons/icon.js';
 import { format, parseISO } from 'date-fns';
 import { useWarehouseStore } from '@/stores/warehouseStore';
 import router from '@/router/index.js';
-
-const warehouseStore = useWarehouseStore();
-// const warehouseData = computed(() => ({
-//   dataSource: warehouseStore.sellers,
-//   totalElements: warehouseStore.totalElements,
-//   currentPage: warehouseStore.currentPage,
-//   pageSize: warehouseStore.pageSize
-// }));
-const dataSource = computed(() => warehouseStore.warehouses);
 
 const columns = [
   { title: 'STT', dataIndex: 'stt', key: 'stt' },
@@ -73,9 +73,27 @@ const columns = [
   { title: 'Actions', key: 'actions' }
 ];
 
-const fetchWarehouses = () => {
-  warehouseStore.fetchWarehouses();
+const warehouseStore = useWarehouseStore();
+
+const warehouseData = computed(() => ({
+  dataSource: warehouseStore.warehouses,
+  totalElements: warehouseStore.totalElements,
+  currentPage: warehouseStore.currentPage,
+  pageSize: warehouseStore.pageSize
+}));
+
+const searchQuery = ref('');
+
+const handleTableChange = (pagination) => {
+  warehouseStore.updatePagination({
+    currentPage: pagination.current
+  });
 };
+
+const handleAction = () => {
+  warehouseStore.fetchWarehouses(1, searchQuery.value);
+}
+
 
 const deleteWarehouse = (id) => {
   warehouseStore.deleteWarehouse(id);
@@ -90,7 +108,7 @@ const handleAddNew = () => {
 };
 
 onMounted(async () => {
-  fetchWarehouses();
+  warehouseStore.fetchWarehouses();
 });
 </script>
 

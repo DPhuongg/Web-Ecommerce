@@ -16,17 +16,27 @@ export const useWarehouseStore = defineStore('warehouse', {
       district: '',
       commune: '',
       address_detail: ''
-    }
+    },
+    totalElements: 0,
+    currentPage: 1,
+    pageSize: 10
   }),
   actions: {
-    async fetchWarehouses() {
-      const response = await apiServices.getAllWarehouse();
-      const reversedData = _.reverse(_.clone(response.data.data.content));
+    updatePagination({ currentPage }) {
+      this.currentPage = currentPage;
+      this.fetchWarehouses(this.currentPage);
+    },
+
+    async fetchWarehouses(page = 1, searchQuery = '') {
+      const response = await apiServices.getAllWarehouse(page, this.pageSize, searchQuery);
+      // const reversedData = _.reverse(_.clone(response.data.data.content));
+      const reversedData = response.data.data.content;
 
       this.warehouses = _.map(reversedData, (item, index) => ({
         ...item,
-        stt: index + 1
+        stt: (page - 1) * this.pageSize + index + 1
       }));
+      this.totalElements = response.data.data.totalElements;
     },
 
     async detailWarehouse(id) {
@@ -38,6 +48,7 @@ export const useWarehouseStore = defineStore('warehouse', {
 
     async addWarehouse(newWarehouse) {
       await apiServices.addWarehouse(newWarehouse);
+      this.currentPage = 1;
       await this.fetchWarehouses();
       router.push({ name: 'menu-10' });
       Swal.fire({
@@ -51,8 +62,9 @@ export const useWarehouseStore = defineStore('warehouse', {
 
     async updateWarehouse(id, newWarehouse) {
       const response = await apiServices.updateWarehouse(id, newWarehouse);
-      console.log(response.data.code);
+      // console.log(response.data.code);
       if (response.data.code === 200) {
+        this.currentPage = 1;
         await this.fetchWarehouses();
         router.push({ name: 'menu-10' });
         Swal.fire({
@@ -85,6 +97,7 @@ export const useWarehouseStore = defineStore('warehouse', {
 
       if (result.isConfirmed) {
         await apiServices.deleteWarehouse(id);
+        this.currentPage = 1;
         await this.fetchWarehouses();
         await Swal.fire({
           title: 'Deleted!',

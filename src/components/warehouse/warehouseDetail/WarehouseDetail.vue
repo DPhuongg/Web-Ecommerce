@@ -66,6 +66,7 @@ const handleSubmit = () => {
 };
 
 const handleBack = () => {
+  warehouseStore.currentPage = 1;
   router.push({ name: 'menu-10' });
 };
 </script>
