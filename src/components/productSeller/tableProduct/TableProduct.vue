@@ -1,6 +1,6 @@
 <template>
   <div class="listProduct bg-[var(--color-five)] p-8">
-    <h2 class="text-[25px] font-bold mb-6">Danh mục kho hàng</h2>
+    <h2 class="text-[25px] font-bold mb-6">Danh sách sản phẩm</h2>
 
     <div class="mb-8 flex justify-between">
       <div class="flex items-center">
@@ -9,7 +9,6 @@
           placeholder="Tên sản phẩm..."
           @focus="handleFocus"
           v-model="searchQuery"
-          @blur="hideList()"
           @keyup.enter="handleAction"
         />
         <SearchIcon @click="handleAction" class="w-[20px] h-[20px]"></SearchIcon>
@@ -24,28 +23,46 @@
     </div>
 
     <div>
-      <a-table :columns="columns" :data-source="dataSource" row-key="id" @change="handleTableChange">
+      <a-table
+        :columns="columns"
+        row-key="id"
+        @change="handleTableChange"
+        :data-source="productData.dataSource"
+        :pagination="{
+          total: productData.totalElements,
+          current: productData.currentPage,
+          pageSize: productData.pageSize
+        }"
+      >
         <template #bodyCell="{ column, record }">
           <span v-if="column.key === 'actions'" class="flex">
             <a href="#" @click.prevent="editItem(record.id)" class="mr-4">
-              <EditIcon class="w-[15px] h-[15px]"></EditIcon>
+              <EyeIcon class="w-[15px] h-[15px]" />
+            </a>
+            <a-divider type="vertical" />
+            <a href="#" @click.prevent="editItem(record.id)" class="mr-4">
+              <EditIcon class="w-[15px] h-[15px]" />
             </a>
             <a-divider type="vertical" />
             <a href="#" @click.prevent="deleteItem(record.id)">
-              <TrashIcon class="w-[15px] h-[15px]"></TrashIcon>
+              <TrashIcon class="w-[15px] h-[15px]" />
             </a>
           </span>
 
-          <span v-else-if="column.key === 'createdAt' || column.key === 'modifiedAt'">
-            {{ format(record[column.dataIndex], 'dd/MM/yyyy HH:mm:ss') }}
+          <span v-else-if="column.key === 'created_at' || column.key === 'modified_at'">
+            {{ record[column.dataIndex] ? format(new Date(record[column.dataIndex]), 'dd/MM/yyyy') : 'N/A' }}
           </span>
 
-          <span v-else-if="column.key === 'image'">
-            <img :src="record[column.dataIndex]" alt="Product Image" class="w-[50px] h-[50px] object-cover" />
+          <span v-else-if="column.key === 'images'">
+            <img :src="record[column.dataIndex][0]" alt="Product Image" class="w-[40px] h-[40px] object-cover" />
           </span>
 
-          <span v-else-if="column.key === 'detail'">
-            <a href="#" @click.prevent="detailItem(record.id)" class="underline text-[#3884E1]"> Chi tiết </a>
+          <span v-else-if="column.key === 'category_names'">
+            <div class="flex flex-wrap">
+              <a-tag v-for="(category, index) in record[column.dataIndex]" :key="index" color="blue" style="margin-right: 5px">
+                {{ category }}
+              </a-tag>
+            </div>
           </span>
 
           <span v-else>
@@ -58,40 +75,74 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { format } from 'date-fns';
-import { SearchIcon, AddIcon, EditIcon, TrashIcon } from '@/assets/icons/icon.js';
+import { SearchIcon, AddIcon, EditIcon, TrashIcon, EyeIcon } from '@/assets/icons/icon.js';
 import router from '@/router/index.js';
 
-// const dataSource = computed(() => warehouseStore.warehouses);
-
-const columns = ref([
-  { title: 'Tên', dataIndex: 'name', key: 'name' },
-  { title: 'Ảnh', dataIndex: 'image', key: 'image' },
-  { title: 'Nhãn hiệu', dataIndex: 'brand', key: 'brand' },
-  { title: 'Danh mục', dataIndex: 'category', key: 'category' },
-  { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt' },
-  { title: 'Ngày sửa', dataIndex: 'modifiedAt', key: 'modifiedAt' },
-  { title: ' Xem chi tiết', dataIndex: 'detail', key: 'detail' },
-  { title: 'Thao tác', key: 'actions' }
-]);
-
-const dataSource = ref([
+const columns = [
+  { title: 'STT', dataIndex: 'stt', key: 'stt' },
   {
-    id: 1,
-    name: 'Sản phẩm A',
-    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
-    brand: 'Nhãn hiệu A',
-    category: 'Danh mục A',
-    createdAt: '2024-08-01 16:45:52.000',
-    modifiedAt: '2024-08-02 16:45:52.000'
+    title: 'Tên sản phẩm',
+    dataIndex: 'name',
+    key: 'name'
+  },
+  {
+    title: 'Hình ảnh',
+    dataIndex: 'images',
+    key: 'images'
+  },
+  {
+    title: 'Nhãn hiệu',
+    dataIndex: 'brand_name',
+    key: 'brand_name'
+  },
+  {
+    title: 'Danh mục',
+    dataIndex: 'category_names',
+    key: 'category_names'
+  },
+  {
+    title: 'Ngày tạo',
+    dataIndex: 'created_at',
+    key: 'created_at'
+  },
+  {
+    title: 'Sửa lần cuối',
+    dataIndex: 'modified_at',
+    key: 'modified_at'
+  },
+  {
+    title: 'Actions',
+    key: 'actions'
   }
-]);
+];
 
-const handleTableChange = (pagination, filters, sorter) => {
-  console.log('Table changed:', { pagination, filters, sorter });
+import { useProductStore } from '@/stores/productSellerStore';
+
+const productStore = useProductStore();
+const searchQuery = ref('');
+
+const productData = computed(() => ({
+  dataSource: productStore.products,
+  totalElements: productStore.totalElements,
+  currentPage: productStore.currentPage,
+  pageSize: productStore.pageSize
+}));
+
+const handleTableChange = (pagination) => {
+  productStore.updatePagination({
+    currentPage: pagination.current
+  });
 };
 
+const handleAction = () => {
+  productStore.fetchProducts(1, searchQuery.value);
+}
+
+const handleAddNew = () => {
+  router.push({name: 'menu-5'});
+}
 const editItem = (id) => {
   console.log('Edit item with id:', id);
   router.push({ name: 'product-detail', params: { id } });
@@ -100,6 +151,10 @@ const editItem = (id) => {
 const deleteItem = (id) => {
   console.log('Edit item with id:', id);
 };
+
+onMounted(async () => {
+  productStore.fetchProducts();
+});
 </script>
 
 <style scoped lang="scss">

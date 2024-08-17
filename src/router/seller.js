@@ -79,6 +79,12 @@ const seller = [
         path: 'create-product',
         name: 'menu-5',
         component: () => import('../components/productSeller/createProduct/CreateProduct.vue')
+      },
+
+      {
+        path: 'test-scroll',
+        name: 'test-scroll',
+        component: () => import('../components/productSeller/test/testProduct.vue')
       }
     ]
   }

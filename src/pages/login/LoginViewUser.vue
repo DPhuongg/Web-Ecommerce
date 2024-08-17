@@ -71,7 +71,7 @@ export default {
     };
 
     const handleSignUpClick = function () {
-      router.push({ path: '/register' });
+      router.push({ name: 'register-user' });
     };
 
     const handleForgotClick = function () {

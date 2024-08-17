@@ -25,8 +25,8 @@ export default {
   },
 
   //CATEGORY
-  getAllCategory() {
-    return httpAuth.get(config.baseApiUrl + '/categories');
+  getAllCategory(page, size, search = '') {
+    return httpAuth.get(`${config.baseApiUrl}/categories?page=${page - 1}&size=${size}&name=${search}`);
   },
   deleteCategory(id) {
     return httpAuth.delete(`${config.baseApiUrl}/categories/${id}`);
@@ -92,9 +92,25 @@ export default {
     return httpAuth.post(config.baseApiUrl + '/api/v1/admin/users/add', newUser);
   },
 
-
   //SUPPLY
   getAllExport(page, size, searchName, searchId) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/inventory/export?page=${page - 1}&size=${size}&skuCode=${searchId}&name=${searchName}`);
+  },
+
+  //BRAND
+  getAllBrand(page, size, search = '') {
+    return httpAuth.get(`${config.baseApiUrl}/api/brands?page=${page - 1}&size=${size}&name=${search}`);
+  },
+
+  //PRODUCT
+  createProduct(formData) {
+    return httpAuth.post(`${config.baseApiUrl}/api/products`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  },
+  getListProduct(page, size, search) {
+    return httpAuth.get(`${config.baseApiUrl}/api/products/seller?page=${page - 1}&size=${size}&keyword=${search}`);
   }
 };
