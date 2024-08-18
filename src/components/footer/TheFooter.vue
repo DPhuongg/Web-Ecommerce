@@ -1,5 +1,5 @@
 <template>
-  <div class="footer bg-[var(--color-three)] mt-[20px]">
+  <div class="footer bg-[var(--color-three)]">
     <div class="container">
       <div class="grid grid-cols-6 gap-4 p-12 justify-center items-center">
         <div class="col-span-3 text-[#ffff]">
