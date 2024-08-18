@@ -25,8 +25,8 @@ export default {
   },
 
   //CATEGORY
-  getAllCategory() {
-    return httpAuth.get(config.baseApiUrl + '/categories');
+  getAllCategory(page, size, searchQuery) {
+    return httpAuth.get(config.baseApiUrl + `/categories?page=${page - 1}&size=${size}&name=${searchQuery}`);
   },
   deleteCategory(id) {
     return httpAuth.delete(`${config.baseApiUrl}/categories/${id}`);
@@ -96,5 +96,29 @@ export default {
   //SUPPLY
   getAllExport(page, size, searchName, searchId) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/inventory/export?page=${page - 1}&size=${size}&skuCode=${searchId}&name=${searchName}`);
-  }
+  },
+
+  getAllImport(page, size, searchName, searchId) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/inventory/import?page=${page - 1}&size=${size}&skuCode=${searchId}&name=${searchName}`);
+  },
+
+
+  //BRAND
+  getAllBrand(page, size, searchQuery) {
+    return httpAuth.get(config.baseApiUrl + `/api/brands?page=${page - 1}&size=${size}&name=${searchQuery}`);
+  },
+  deleteBrand(id) {
+    return httpAuth.delete(`${config.baseApiUrl}/api/brands/${id}`);
+  },
+  editBrand(id, name, status) {
+    return httpAuth.put(`${config.baseApiUrl}/api/brands/${id}`, { name: name, status: status });
+  },
+  addBrand(name) {
+    return httpAuth.post(config.baseApiUrl + '/api/brands', { name: name, status: true });
+  },
+  getBrand(id) {
+    // console.log(httpAuth.get(`${config.baseApiUrl}/categories/${id}`));
+    return httpAuth.get(`${config.baseApiUrl}/api/brands/${id}`);
+  },
+
 };

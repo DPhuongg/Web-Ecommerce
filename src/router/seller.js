@@ -12,13 +12,13 @@ const seller = [
       {
         path: 'category',
         name: 'menu-2',
-        component: () => import('../components/category/categoryMain/CategoryView.vue')
+        component: () => import('../components/category/ListCategory/ListCategory.vue')
       },
 
       {
         path: 'brand',
         name: 'menu-3',
-        component: () => import('../components/brand/BrandView.vue')
+        component: () => import('../components/brand/ListBrand/ListBrand.vue')
       },
 
       {
@@ -79,7 +79,13 @@ const seller = [
         path: 'create-product',
         name: 'menu-5',
         component: () => import('../components/productSeller/createProduct/CreateProduct.vue')
-      }
+      },
+      {
+        path: 'export-supply',
+        name: 'menu-16',
+        component: () => import('../components/supply/listImport/ListImport.vue')
+      },
+
     ]
   }
 ];
