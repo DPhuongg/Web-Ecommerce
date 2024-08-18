@@ -55,6 +55,9 @@ export default {
   updateShopInfo(newShopInfo) {
     return httpAuth.put(config.baseApiUrl + '/api/v1/shop', newShopInfo);
   },
+  getShopById(id){
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/shop/${id}`);
+  },
 
   //WAREHOUSE
   getAllWarehouse(page, size, searchQuery) {
@@ -112,5 +115,13 @@ export default {
   },
   getListProduct(page, size, search) {
     return httpAuth.get(`${config.baseApiUrl}/api/products/seller?page=${page - 1}&size=${size}&keyword=${search}`);
+  },
+
+  //CART
+  getAllCart() {
+    return httpAuth.get(`${config.baseApiUrl}/api/cart-items`);
+  },
+  getItemCart(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
   }
 };
