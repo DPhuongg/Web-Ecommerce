@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
-    token: localStorage.getItem('token') || '',
+    token: localStorage.getItem('token') || ''
   }),
   getters: {
     isLoggedIn: (state) => !!state.token
@@ -18,8 +18,6 @@ export const useAuthStore = defineStore({
 
         localStorage.setItem('token', response.data.data.token);
         this.token = response.data.data.token;
-        // console.log(this.user);
-        // console.log(this.isLoggedIn);
         router.push({ path: `/${role}/home` });
       } catch (error) {
         const status = error.response.status;
@@ -52,6 +50,41 @@ export const useAuthStore = defineStore({
             text: 'User with this email already existed',
             footer: '<a href="#">Why do I have this issue?</a>'
           });
+        }
+      }
+    },
+
+    async verifyOTP(newUser) {
+      try {
+        router.push({
+          name: 'verification',
+          params: {
+            email: newUser.email
+          }
+        });
+        const response = await authService.sendOTP(newUser);
+        if (response.data.code === 200) {
+          console.log(newUser.email);
+        }
+      } catch (error) {
+        if (error.response) {
+          const status = error.response.status;
+          if (status === 500) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Please try again in 1 minute',
+              footer: '<a href="#">Why do I have this issue?</a>'
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Email already existed'
+            });
+          }
+        } else {
+          console.log('Lỗi mạng');
         }
       }
     },

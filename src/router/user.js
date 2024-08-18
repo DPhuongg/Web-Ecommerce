@@ -8,6 +8,11 @@ const home = [
         name: 'Home user',
         component: () => import('../pages/Home/User/HomeUserView.vue')
       },
+      {
+        path: 'list-cart',
+        name: 'list-cart',
+        component: () => import('../components/managerCart/listCart/ListCart.vue')
+      },
     ]
   }
 ];

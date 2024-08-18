@@ -29,6 +29,19 @@ export default {
   },
   forgot(email) {
     // http://localhost:3000/api/v1/forgotPassword/changePassword/{email}
-    return http.post(`${config.baseApiUrl}/api/v1/forgotPassword/changePassword/${email}`, { email: email});
+    return http.post(`${config.baseApiUrl}/api/v1/forgotPassword/changePassword/${email}`, { email: email });
   },
+
+  sendOTP(newUser) {
+    // console.log(newUser)
+    return http.post(`${config.baseApiUrl}/api/v1/${newUser.role}/signUpNewVersion`, newUser);
+  },
+
+  checkOTP(email, otp) {
+    return http.post(config.baseApiUrl + '/api/v1/user/verifyOtp', { email: email, otp: otp });
+  },
+
+  resendOTP(email) {
+    return http.post(`${config.baseApiUrl}/api/v1/user/resendOtp`, { email: email });
+  }
 };

@@ -23,7 +23,7 @@
           <SearchIcon class="icon__search"></SearchIcon>
         </button>
 
-        <button class="button__cart">
+        <button class="button__cart"  @click="handleCartClick">
           <CartIcon class="icon__cart"></CartIcon>
           <span class="header__title">Giỏ hàng</span>
         </button>
@@ -57,6 +57,10 @@ const logout = () => {
   authStore.logout();
   router.push({ path: '/home/user' });
 };
+
+const handleCartClick = () => {
+  router.push({ name: 'list-cart' });
+}
 </script>
 
 <style scoped lang="scss">

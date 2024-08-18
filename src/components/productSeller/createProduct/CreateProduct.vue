@@ -2,99 +2,173 @@
   <div class="product flex p-8 justify-between bg-[#ffff]">
     <div class="w-[65%]">
       <h2 class="text-[22px] font-bold mb-8">Thông tin sản phẩm</h2>
-      <input class="input input--one w-full uppercase" placeholder="Sản phẩm A" />
+      <input class="input input--one w-full uppercase" placeholder="Sản phẩm A" v-model="product.name" />
       <h2 class="pt-6 pb-3 text-[16px] font-normal">Mô tả sản phẩm</h2>
       <textarea
-        class="input textarea textarea--one w-full h-[200px] p-3 outline-none"
+        class="input textarea textarea--one w-full h-[100px] p-3 outline-none"
         placeholder="Nhập mô tả sản phẩm"
-        v-model="productDescription"
+        v-model="product.description"
       ></textarea>
       <h3 class="pt-6 pb-3 text-[16px] font-normal mb-3">Ảnh mô tả sản phẩm</h3>
 
       <div class="flex w-full flex-wrap">
-        <div class="relative w-[60px] h-[60px] mr-5" v-for="(image, index) in imagePreviews" :key="index">
+        <div class="relative w-[60px] h-[60px] mr-5" v-for="(image, index) in imagesView" :key="index">
           <img :src="image" class="product__thumbnail w-full h-full mr-10" />
           <CloseIcon @click="removeImage(index)" class="absolute w-[20px] h-[20px] top-[-10px] right-[-6px]"></CloseIcon>
         </div>
       </div>
 
       <div
-        class="mt-8 px-3 z-30 py-3 bg-rose-400 rounded-md text-white relative font-semibold font-sans after:-z-20 after:absolute after:h-1 after:w-1 after:bg-rose-800 after:left-5 overflow-hidden after:bottom-0 after:translate-y-full after:rounded-md after:hover:scale-[300] after:hover:transition-all after:hover:duration-700 after:transition-all after:duration-700 transition-all duration-700 [text-shadow:3px_5px_2px_#be123c;] hover:[text-shadow:2px_2px_2px_#fda4af] text-[16px] w-[150px]"
+        class="mt-8 px-3 z-30 py-2 bg-rose-400 rounded-md text-white relative font-semibold font-sans after:-z-20 after:absolute after:h-1 after:w-1 after:bg-rose-800 after:left-5 overflow-hidden after:bottom-0 after:translate-y-full after:rounded-md after:hover:scale-[300] after:hover:transition-all after:hover:duration-700 after:transition-all after:duration-700 transition-all duration-700 [text-shadow:3px_5px_2px_#be123c;] hover:[text-shadow:2px_2px_2px_#fda4af] text-[16px] w-[110px]"
       >
         <p class="text-center text-[#fff] font-medium">Chọn ảnh</p>
         <input type="file" class="absolute inset-0 opacity-0" @change="handleImageUpload" />
       </div>
     </div>
 
-    <div class="w-[30%] mt-[65px]">
+    <div class="w-[30%]">
+      <div class="w-full flex justify-end mb-[20px]">
+        <button class="button button--one" @click="handleClick">Tạo mới</button>
+      </div>
       <select v-model="status" class="input input--one w-full">
-        <option value="open">Mở bán</option>
-        <option value="close">Dừng bán</option>
+        <option value="1">Mở bán</option>
+        <option value="0">Dừng bán</option>
       </select>
 
-      <p class="pt-6 pb-3 text-[16px] font-normal">Nhãn hiệu sản phẩm</p>
-      <select v-model="selectedBrand" class="input input--one w-full">
-        <option v-for="brand in brands" :key="brand.value" :value="brand.value">
-          {{ brand.label }}
-        </option>
-      </select>
+      <div>
+        <p class="pt-6 pb-3 text-[16px] font-normal">Nhãn hiệu sản phẩm</p>
+        <a-select
+          v-model:value="brand"
+          show-search
+          placeholder="Chọn nhãn hiệu"
+          style="width: 100%"
+          :options="brands"
+          :filter-option="(input, option) => option.label.toLowerCase().includes(input.toLowerCase())"
+          @search="fetchCategory"
+          @change="handleChangeOne"
+        ></a-select>
+      </div>
 
-      <p class="pt-6 pb-3 text-[16px] font-normal">Danh mục sản phẩm</p>
-      <select v-model="selectedCategories" class="input input--one w-full">
-        <option v-for="category in categories" :key="category" :value="category">
-          {{ category }}
-        </option>
-      </select>
+      <div>
+        <p class="pt-6 pb-3 text-[16px] font-normal">Danh mục sản phẩm</p>
+        <a-select
+          v-model:value="category"
+          mode="multiple"
+          show-search
+          placeholder="Chọn danh mục"
+          style="width: 100%"
+          :options="categories"
+          :filter-option="(input, option) => option.label.toLowerCase().includes(input.toLowerCase())"
+          @search="fetchCategory"
+          @change="handleChangeTwo"
+        ></a-select>
+      </div>
 
-      <label class="block mt-5 mb-3 text-[16px]" for="input-price">Giá nhập</label>
-      <input class="input input--one w-full" type="number" id="input-price" v-model="inputPrice" placeholder="Nhập giá nhập..." min="0" />
-
-      <label class="block mt-5 mb-3 text-[16px]" for="sale-price">Giá bán</label>
-      <input class="input input--one w-full" type="number" id="sale-price" v-model="salePrice" placeholder="Nhập giá bán..." min="0" />
-
-      <div class="flex justify-between mt-9">
-        <button class="button button--one">Tạo mới</button>
-        <button class="button button--two underline">Quay lại</button>
+      <div class="w-full flex justify-end mb-[20px]">
+        <button class="button button--two underline mt-[150px]">Quay lại</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { CloseIcon } from '@/assets/icons/icon.js';
+import apiServices from '@/domain/apiServices';
+import Swal from 'sweetalert2';
 
-const status = ref('open');
+import { ref, onMounted, reactive } from 'vue';
+import { useProductStore } from '@/stores/productSellerStore';
 
-const imagePreviews = ref([
-  'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
-  'https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg',
-  'https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg'
-]);
+const productStore = useProductStore();
 
-const brands = ref([
-  { value: 'apple', label: 'Apple' },
-  { value: 'samsung', label: 'Samsung' },
-  { value: 'sony', label: 'Sony' },
-  { value: 'lg', label: 'LG' }
-]);
+const brands = ref([]);
+const brand = ref('');
+const category = ref([]);
+const categories = ref([]);
+const status = ref('1');
 
-const categories = ref(['Electronics', 'Fashion', 'Home Appliances', 'Books', 'Toys']);
+const product = reactive({
+  name: '',
+  description: '',
+  status: '1',
+  brandId: '',
+  categoryIds: [],
+  images: []
+});
+
+const imagesView = ref([]);
+
+const fetchBrand = async (searchText) => {
+  const response = await apiServices.getAllBrand(1, 10, searchText);
+  brands.value = response.data.data.content.map((category) => ({
+    value: category.id,
+    label: category.name
+  }));
+};
+
+const fetchCategory = async (searchText) => {
+  console.log(searchText);
+  const response = await apiServices.getAllCategory(1, 10, searchText);
+  categories.value = response.data.data.content.map((category) => ({
+    value: category.id,
+    label: category.name
+  }));
+};
+
+const handleChangeOne = (selectedBrand) => {
+  product.brandId = selectedBrand;
+};
+
+const handleChangeTwo = (selectedCategories) => {
+  product.categoryIds = selectedCategories;
+};
+
+const MAX_IMAGES = 8;
 
 function removeImage(index) {
-  imagePreviews.value.splice(index, 1);
+  product.images.splice(index, 1);
+  imagesView.value.splice(index, 1);
 }
 
 function handleImageUpload(event) {
   const files = event.target.files;
-  for (let i = 0; i < files.length; i++) {
+
+  if (files.length === 0) return;
+  
+  if (product.images.length >= MAX_IMAGES) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Bạn đã tải lên vượt quá số ảnh!'
+    });
+    return;
+  }
+
+  const remainingSlots = MAX_IMAGES - product.images.length;
+  const filesToUpload = Math.min(files.length, remainingSlots);
+
+  for (let i = 0; i < filesToUpload; i++) {
+    const file = files[i];
+    product.images.push(file);
+
+    // Tạo URL dữ liệu cho ảnh để hiển thị trong giao diện
     const reader = new FileReader();
     reader.onload = (e) => {
-      imagePreviews.value.push(e.target.result);
+      const imagePreviewUrl = e.target.result;
+      imagesView.value.push(imagePreviewUrl); 
     };
-    reader.readAsDataURL(files[i]);
+    reader.readAsDataURL(file);
   }
 }
+
+const handleClick = () => {
+  productStore.addProduct(product);
+};
+
+onMounted(async () => {
+  await fetchBrand();
+  await fetchCategory();
+});
 </script>
 <style scoped lang="scss">
 @import './style.scss';

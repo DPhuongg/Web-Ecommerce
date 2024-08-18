@@ -86,6 +86,11 @@ const seller = [
         component: () => import('../components/supply/listImport/ListImport.vue')
       },
 
+      {
+        path: 'test-scroll',
+        name: 'test-scroll',
+        component: () => import('../components/productSeller/test/testProduct.vue')
+      }
     ]
   }
 ];

@@ -92,7 +92,6 @@ export default {
     return httpAuth.post(config.baseApiUrl + '/api/v1/admin/users/add', newUser);
   },
 
-
   //SUPPLY
   getAllExport(page, size, searchName, searchId) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/inventory/export?page=${page - 1}&size=${size}&skuCode=${searchId}&name=${searchName}`);

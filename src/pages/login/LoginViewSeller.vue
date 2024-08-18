@@ -64,12 +64,11 @@ export default {
         });
       } catch (error) {
         console.error('Login Error:', error);
-        // Xử lý lỗi nếu cần thiết
       }
     };
 
     const handleSignUpClick = function () {
-      router.push({ path: '/register' });
+      router.push({ name: 'register-seller' });
     };
 
     const handleForgotClick = function () {
