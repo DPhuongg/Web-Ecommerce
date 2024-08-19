@@ -5,13 +5,22 @@ import axios from 'axios';
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
-    cartItems: []
+    cartItems: [],
+    totalElements: 0,
+    currentPage: 1,
+    pageSize: 10,
+    totalPrice: 0
   }),
 
   actions: {
-    async fetchCartItems() {
+    updatePagination({ currentPage }) {
+      this.currentPage = currentPage;
+      this.fetchCartItems(this.currentPage);
+    },
+
+    async fetchCartItems(page = 1) {
       try {
-        const response = await apiServices.getAllCart();
+        const response = await apiServices.getAllCart(page);
         const content = response.data.data.content;
         console.log(content);
 
@@ -31,20 +40,13 @@ export const useCartStore = defineStore('cart', {
 
         // Chờ tất cả các promises hoàn thành
         this.cartItems = await Promise.all(promises);
+        this.totalElements = response.data.data.totalElements;
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
     },
 
-    increaseQuantity(index) {
-      this.cartItems[index].quantity++;
-    },
 
-    decreaseQuantity(index) {
-      if (this.cartItems[index].quantity > 1) {
-        this.cartItems[index].quantity--;
-      }
-    },
 
     removeItem(index) {
       this.cartItems.splice(index, 1);

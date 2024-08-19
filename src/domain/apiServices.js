@@ -118,8 +118,8 @@ export default {
   },
 
   //CART
-  getAllCart() {
-    return httpAuth.get(`${config.baseApiUrl}/api/cart-items`);
+  getAllCart(page) {
+    return httpAuth.get(`${config.baseApiUrl}/api/cart-items?page=${page - 1}`);
   },
   getItemCart(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
