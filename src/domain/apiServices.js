@@ -19,9 +19,9 @@ export default {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/${role}/me`);
   },
 
-  //PRODCUT
+  //PRODCUT USER
   getAllProduct() {
-    return httpAuth.get(config.baseApiUrl + '/products');
+    return httpAuth.get(config.baseApiUrl + '/api/products/user');
   },
 
   //CATEGORY

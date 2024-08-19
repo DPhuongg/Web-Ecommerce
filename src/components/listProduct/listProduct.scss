@@ -3,3 +3,12 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
 }
+
+.custom-rate .ant-rate-star svg {
+  width: 5px; /* Đặt kích thước mong muốn */
+  height: 5px; /* Đặt kích thước mong muốn */
+  .svg {
+    width: 5px; /* Đặt kích thước mong muốn */
+    height: 5px;
+  }
+}

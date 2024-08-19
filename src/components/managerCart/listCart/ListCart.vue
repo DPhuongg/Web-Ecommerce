@@ -24,7 +24,11 @@
       >
         <template v-slot:bodyCell="{ column, record }">
           <template v-if="column.key === 'checkbox'">
-            <a-checkbox class="w-[25px] h-[25px] mr-3" v-model:checked="record.selected" @change="handleCheckboxChange(record.id, $event)" />
+            <a-checkbox
+              class="w-[25px] h-[25px] mr-3"
+              v-model:checked="record.selected"
+              @change="handleCheckboxChange(record.id, $event.target.checked)"
+            />
           </template>
 
           <template v-else-if="column.key === 'attributes'">
@@ -58,9 +62,9 @@
 
           <template v-else-if="column.key === 'quantity'">
             <div class="quantity-controls">
-              <button @click="decreaseQuantity(record.id)" class="text-[20px]">-</button>
+              <button @click="decreaseQuantity(record)" class="text-[20px]">-</button>
               <input v-model.number="record.quantity" min="1" style="width: 60px; text-align: center" class="outline-none" />
-              <button @click="increaseQuantity(record.id)" class="text-[20px]">+</button>
+              <button @click="increaseQuantity(record)" class="text-[20px]">+</button>
             </div>
           </template>
 
@@ -153,6 +157,7 @@ const handleTableChange = (pagination) => {
 };
 
 const handleCheckboxChange = (id, checked) => {
+  console.log(checked);
   const item = cartStore.cartItems.find((item) => item.id === id);
 
   if (item) {
@@ -171,17 +176,29 @@ const handleCheckboxChange = (id, checked) => {
 
 const removeItem = cartStore.removeItem;
 
-const decreaseQuantity = (id) => {
-  const item = cartStore.cartItems.find((i) => i.id === id);
+const decreaseQuantity = (record) => {
+  const item = cartStore.cartItems.find((i) => i.id === record.id);
   if (item && item.quantity > 1) {
+    const previousTotalPrice = item.quantity * item.productDetails.price;
     item.quantity -= 1;
+    const newTotalPrice = item.quantity * item.productDetails.price;
+
+    if (item.selected) {
+      cartStore.totalPrice -= previousTotalPrice - newTotalPrice;
+    }
   }
 };
 
-const increaseQuantity = (id) => {
-  const item = cartStore.cartItems.find((i) => i.id === id);
+const increaseQuantity = (record) => {
+  const item = cartStore.cartItems.find((i) => i.id === record.id);
   if (item) {
+    const previousTotalPrice = item.quantity * item.productDetails.price;
     item.quantity += 1;
+    const newTotalPrice = item.quantity * item.productDetails.price;
+
+    if (item.selected) {
+      cartStore.totalPrice += newTotalPrice - previousTotalPrice;
+    }
   }
 };
 

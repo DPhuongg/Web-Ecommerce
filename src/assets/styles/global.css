@@ -22,3 +22,15 @@
 a {
   text-decoration: none;
 } /*# sourceMappingURL=global.css.map */
+
+.custom-rate .ant-rate-star svg {
+  width: 12px; /* Đặt kích thước mong muốn */
+  height: 12px;
+  margin-right: 0;
+  padding: 0;
+}
+
+.custom-rate .ant-rate-star .ant-rate-star-full {
+  margin: 0;
+  padding: 0;
+}
