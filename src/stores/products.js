@@ -6,18 +6,17 @@ import axios from 'axios';
 export const productStore = defineStore('products', {
   state: () => ({
     products: [],
-    isLoading: false,
-    error: null
+    totalElements: 0,
+    currentPage: 1,
+    pageSize: 10
   }),
 
   actions: {
     async fetchProducts() {
-      this.isLoading = true;
-      this.error = null;
       try {
-        // const response = await apiServices.getAllProduct();
-        const response = await axios.get('http://localhost:3000/products');
-        this.products = response.data;
+        const response = await apiServices.getAllProduct();
+        this.products = response.data.data.productResponses;
+        console.log(this.products);
       } catch (err) {
         this.error = 'Faliled';
         console.log(err);

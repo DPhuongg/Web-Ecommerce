@@ -19,9 +19,9 @@ export default {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/${role}/me`);
   },
 
-  //PRODCUT
+  //PRODCUT USER
   getAllProduct() {
-    return httpAuth.get(config.baseApiUrl + '/products');
+    return httpAuth.get(config.baseApiUrl + '/api/products/user');
   },
 
   //CATEGORY
@@ -147,11 +147,11 @@ export default {
     deleteProduct(id) {
       return httpAuth.delete(`${config.baseApiUrl}/api/products/${id}`);
     },
-    //CART
-    getAllCart() {
-      return httpAuth.get(`${config.baseApiUrl}/api/cart-items`);
-    },
-    getItemCart(id) {
-      return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
-    }
+  //CART
+  getAllCart(page) {
+    return httpAuth.get(`${config.baseApiUrl}/api/cart-items?page=${page - 1}`);
+  },
+  getItemCart(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
+  }
 };
