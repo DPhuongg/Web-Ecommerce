@@ -1,40 +1,44 @@
 <template>
   <div class="product flex p-8 justify-between bg-[#ffff]">
     <div class="w-[65%]">
+      <!-- Thông tin sản phẩm -->
       <h2 class="text-[22px] font-bold mb-8">Thông tin sản phẩm</h2>
-      <input class="input input--one w-full uppercase" placeholder="Sản phẩm A" v-model="product.name" />
+      <input class="input input--one w-full uppercase" placeholder="Sản phẩm A"   v-model="product.name" />
+      
+      <!-- Mô tả sản phẩm -->
       <h2 class="pt-6 pb-3 text-[16px] font-normal">Mô tả sản phẩm</h2>
       <textarea
-        class="input textarea textarea--one w-full h-[100px] p-3 outline-none"
+        class="input textarea textarea--one w-full h-[200px] p-3 outline-none"
         placeholder="Nhập mô tả sản phẩm"
         v-model="product.description"
       ></textarea>
+      
+      <!-- Ảnh mô tả sản phẩm -->
       <h3 class="pt-6 pb-3 text-[16px] font-normal mb-3">Ảnh mô tả sản phẩm</h3>
-
       <div class="flex w-full flex-wrap">
         <div class="relative w-[60px] h-[60px] mr-5" v-for="(image, index) in imagesView" :key="index">
           <img :src="image" class="product__thumbnail w-full h-full mr-10" />
           <CloseIcon @click="removeImage(index)" class="absolute w-[20px] h-[20px] top-[-10px] right-[-6px]"></CloseIcon>
         </div>
       </div>
-
+      
+      <!-- Nút chọn ảnh -->
       <div
-        class="mt-8 px-3 z-30 py-2 bg-rose-400 rounded-md text-white relative font-semibold font-sans after:-z-20 after:absolute after:h-1 after:w-1 after:bg-rose-800 after:left-5 overflow-hidden after:bottom-0 after:translate-y-full after:rounded-md after:hover:scale-[300] after:hover:transition-all after:hover:duration-700 after:transition-all after:duration-700 transition-all duration-700 [text-shadow:3px_5px_2px_#be123c;] hover:[text-shadow:2px_2px_2px_#fda4af] text-[16px] w-[110px]"
+        class="mt-8 px-3 z-30 py-3 bg-rose-400 rounded-md text-white relative font-semibold font-sans after:-z-20 after:absolute after:h-1 after:w-1 after:bg-rose-800 after:left-5 overflow-hidden after:bottom-0 after:translate-y-full after:rounded-md after:hover:scale-[300] after:hover:transition-all after:hover:duration-700 after:transition-all after:duration-700 transition-all duration-700 [text-shadow:3px_5px_2px_#be123c;] hover:[text-shadow:2px_2px_2px_#fda4af] text-[16px] w-[150px]"
       >
         <p class="text-center text-[#fff] font-medium">Chọn ảnh</p>
         <input type="file" class="absolute inset-0 opacity-0" @change="handleImageUpload" />
       </div>
     </div>
 
-    <div class="w-[30%]">
-      <div class="w-full flex justify-end mb-[20px]">
-        <button class="button button--one" @click="handleClick">Tạo mới</button>
-      </div>
-      <select v-model="status" class="input input--one w-full">
-        <option value="1">Mở bán</option>
-        <option value="0">Dừng bán</option>
-      </select>
-
+    <div class="w-[30%] mt-[65px] flex flex-col justify-between">
+      <div>
+        <!-- Trạng thái sản phẩm -->
+            <select v-model="product.status" class="input input--one w-full">
+            <option value="1">Mở bán</option>
+            <option value="0">Dừng bán</option>
+            </select>
+        <!-- Nhãn hiệu sản phẩm -->
       <div>
         <p class="pt-6 pb-3 text-[16px] font-normal">Nhãn hiệu sản phẩm</p>
         <a-select
@@ -49,50 +53,58 @@
         ></a-select>
       </div>
 
-      <div>
-        <p class="pt-6 pb-3 text-[16px] font-normal">Danh mục sản phẩm</p>
-        <a-select
-          v-model:value="category"
-          mode="multiple"
-          show-search
-          placeholder="Chọn danh mục"
-          style="width: 100%"
-          :options="categories"
-          :filter-option="(input, option) => option.label.toLowerCase().includes(input.toLowerCase())"
-          @search="fetchCategory"
-          @change="handleChangeTwo"
-        ></a-select>
+        
+        <!-- Danh mục sản phẩm -->
+        <div>
+            <p class="pt-6 pb-3 text-[16px] font-normal">Danh mục sản phẩm</p>
+            <a-select
+            v-model:value="defaultCategory"
+            mode="multiple"
+            show-search
+            placeholder="Chọn danh mục"
+            style="width: 100%"
+            :options="categories" 
+            :filter-option="(input, option) => option.label.toLowerCase().includes(input.toLowerCase())"
+            @search="fetchCategory"
+            @change="handleChangeTwo"
+            ></a-select>
+        </div>
       </div>
 
-      <div class="w-full flex justify-end mb-[20px]">
-        <button class="button button--two underline mt-[150px]">Quay lại</button>
+      <!-- Nút Cập nhật và Quay lại -->
+      <div class="flex justify-between mt-9">
+        <button class="button button--one" @click="handleClick">Cập nhật</button>
+        <button class="button button--two underline">Quay lại</button>
       </div>
     </div>
   </div>
 </template>
 
+
 <script setup>
 import { CloseIcon } from '@/assets/icons/icon.js';
 import apiServices from '@/domain/apiServices';
 import Swal from 'sweetalert2';
-
+import { useRoute } from 'vue-router';
 import { ref, onMounted, reactive } from 'vue';
 import { useProductStore } from '@/stores/productSellerStore';
 
 const productStore = useProductStore();
 
 const brands = ref([]);
-const brand = ref('');
+const brand = ref(productStore.product.brand_name);
 const category = ref([]);
+const defaultCategory = ref([])
 const categories = ref([]);
-const status = ref('1');
+const route = useRoute();
+const id = ref(route.params.id);
 
 const product = reactive({
-  name: '',
-  description: '',
-  status: '1',
-  brandId: '',
-  categoryIds: [],
+  name: productStore.product.name,
+  description: productStore.product.description,
+  status: productStore.product.status,
+  brandId: productStore.product.brand_id,
+  categoryIds:defaultCategory.value,
   images: []
 });
 
@@ -113,6 +125,7 @@ const fetchCategory = async (searchText="") => {
     value: category.id,
     label: category.name
   }));
+
 };
 
 const handleChangeOne = (selectedBrand) => {
@@ -162,12 +175,20 @@ function handleImageUpload(event) {
 }
 
 const handleClick = () => {
-  productStore.addProduct(product);
+  productStore.updateProduct(product,id.value);
 };
 
 onMounted(async () => {
-  await fetchBrand();
-  await fetchCategory();
+    await productStore.fetchProduct(id.value);
+    defaultCategory.value= productStore.product.categories.map((category) => ({
+        value: category.id,
+        label: category.name
+    }));
+    imagesView.value = [...productStore.product.images];
+    product.images = productStore.product.images
+    // product.categoryIds = productStore.product.categories.map((category) => category.id);
+    await fetchCategory();
+    await fetchBrand();
 });
 </script>
 <style scoped lang="scss">

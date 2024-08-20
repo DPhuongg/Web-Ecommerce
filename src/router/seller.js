@@ -42,13 +42,15 @@ const seller = [
       {
         path: 'list-product',
         name: 'menu-4',
-        component: () => import('../components/productSeller/tableProduct/TableProduct.vue')
+        component: () => import('../components/productSeller/tableProduct/TableProduct.vue'),
+        props: (route) => ({ page: route.query.page || 1 })
       },
 
       {
         path: 'product-detail/:id',
         name: 'product-detail',
-        component: () => import('../components/productSeller/productDetail/ProductDetail.vue')
+        component: () => import('../components/productSeller/productDetail/ProductDetail.vue'),
+        props: (route) => ({ page: route.query.id})
       },
 
       {
@@ -90,6 +92,18 @@ const seller = [
         path: 'test-scroll',
         name: 'test-scroll',
         component: () => import('../components/productSeller/test/testProduct.vue')
+      },
+      {
+        path: 'product-item/:id',
+        name: 'product-item',
+        component: () => import('../pages/productItem/productItem.vue'),
+        props: (route) => ({ page: route.query.id})
+      },
+      {
+        path: 'product-edit/:id',
+        name: 'product-edit',
+        component: () => import('../components/productSeller/editProduct/editProduct.vue'),
+        props: (route) => ({ page: route.query.id})
       }
     ]
   }

@@ -136,7 +136,6 @@ const handleTableChange = (pagination) => {
 };
 
 const handleAction = () => {
-    console.log("khanhdz",searchQuery.value)
     categoryStore.fetchCategory(1, searchQuery.value);
     categoryStore.currentPage = 1;
 }

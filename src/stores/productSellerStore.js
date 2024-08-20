@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 export const useProductStore = defineStore('products', {
   state: () => ({
+    product:[],
     products: [],
     totalElements: 0,
     currentPage: 1,
@@ -43,7 +44,6 @@ export const useProductStore = defineStore('products', {
 
     createFormData() {
       const formData = new FormData();
-
       formData.append('name', this.productForm.name);
       formData.append('description', this.productForm.description);
       formData.append('status', this.productForm.status);
@@ -70,7 +70,7 @@ export const useProductStore = defineStore('products', {
       const formData = this.createFormData();
       const response = await apiServices.createProduct(formData);
       if (response.data.code === 200) {
-        router.push({ name: 'menu-4' });
+        router.push({ name: 'menu-4' , query: { page: 1 } });
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -79,6 +79,55 @@ export const useProductStore = defineStore('products', {
           timer: 1500
         });
       }
-    }
+    },
+
+    async fetchProduct(id) {
+      console.log("load product by id", id)
+      const response = await apiServices.getProduct(id);
+      console.log("call api product", response)
+      this.product = response.data.data;
+    },
+
+    async updateProduct(product,id) {
+      this.productForm = { ...product };
+      console.log("this.productForm.name",this.productForm.status);
+      const formData = this.createFormData();
+      console.log("idddddđ", formData)
+      const response = await apiServices.updateProduct(formData,id);
+      if (response.data.code === 200) {
+        router.push({ name: 'menu-4' , query: { page: 1 } });
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'cập nhật sản phẩm thành công',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    },
+
+    async deleteProduct(id) {
+      const result = await Swal.fire({
+        title: 'Bạn chắc chắn muốn xóa sản phẩm này?',
+        text: 'Bạn sẽ không thể hoàn tác thao tác này!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Xác nhận!'
+      });
+
+      if (result.isConfirmed) {
+        await apiServices.deleteProduct(id);
+        this.currentPage = 1;
+        await this.fetchProducts();
+        await Swal.fire({
+          title: 'Deleted!',
+          text: 'Sản phẩm đã được xóa thành công',
+          icon: 'success'
+        });
+      }
+    },
+
   }
 });
