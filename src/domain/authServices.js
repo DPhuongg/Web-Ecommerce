@@ -2,8 +2,9 @@ import config from '@/configs/appBase';
 import http from '@/infrastructures/apiHttp';
 
 export default {
-  register(fullName, email, password, role) {
-    return http.post(`${config.baseApiUrl}/api/v1/${role}/signup`, { fullName: fullName, email: email, password: password });
+  register(fullName, email, password, role, addressData) {
+    return http.post(`${config.baseApiUrl}/api/v1/${role}/signup`, { fullName: fullName, email: email, password: password, ...addressData });
+    // return http.post(`${config.baseApiUrl}/api/v1/${role}/signUpNewVersion`, { fullName: fullName, email: email, password: password });
     // return http.post(config.baseApiUrl + '/register', data);
   },
   login(email, password, role) {

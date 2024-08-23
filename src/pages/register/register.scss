@@ -110,3 +110,47 @@ form {
     text-shadow: 0 0 10px #f45678;
   }
 }
+
+.register__buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.button--one,
+.button--twoo {
+  flex: 1;
+  padding: 10px 0;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.button--one {
+  background-color: #28a745; // user
+  margin-right: 10px;
+
+  &:hover {
+    background-color: #218838;
+  }
+}
+
+.button--twoo {
+  background-color: #007bff; // seller
+  margin-right: 10px;
+  
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
+
+.register__form-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
