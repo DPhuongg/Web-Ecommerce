@@ -5,6 +5,9 @@ import router from '@/router/index.js';
 import _ from 'lodash';
 
 
+
+
+
 export const useAttributeProductStore = defineStore('attributes', {
   state: () => ({
     attribute:[],
@@ -18,7 +21,8 @@ export const useAttributeProductStore = defineStore('attributes', {
   actions: {
     async fetchAttributeProduct(id) {
       const response = await apiServices.getListAttributeProduct(id);
-      const content = response.data.data.productResponses;
+      console.log("có vô không thì bảo",response.data.data)
+      this.attributes = response.data.data;
     },
 
     createFormData() {
@@ -29,10 +33,10 @@ export const useAttributeProductStore = defineStore('attributes', {
       return formData;
     },
 
-    async addAttributeProduct(attribute) {
+    async addAttributeProduct(attribute,id) {
       this.attributesForm = { ...attribute };
-      const formData = this.createFormData();
-      const response = await apiServices.createAttributeProduct(formData);
+      console.log('ceateAttribute id', id)
+      const response = await apiServices.createAttributeProduct(attribute, id);
       if (response.data.code === 200) {
         Swal.fire({
           position: 'top-end',
@@ -44,10 +48,10 @@ export const useAttributeProductStore = defineStore('attributes', {
       }
     },
 
-    async fetchAttributeProduct(id) {
-      const response = await apiServices.getAttributeProduct(id);
-      this.product = response.data.data;
-    },
+    // async fetchAttributeProduct(id) {
+    //   const response = await apiServices.getAttributeProduct(id);
+    //   this.product = response.data.data;
+    // },
 
     async updateAttributeProduct(attribute,id) {
       this.AttributeProduct = { ...attribute };
@@ -86,6 +90,5 @@ export const useAttributeProductStore = defineStore('attributes', {
         });
       }
     },
-
   }
 });

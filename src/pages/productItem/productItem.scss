@@ -24,3 +24,7 @@ background-color: #218838;
   font-weight: bold; /* Tùy chọn: Làm đậm chữ */
   margin-bottom: 20px; /* Tùy chọn: Thêm khoảng cách dưới */
 }
+
+::v-deep .ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.5); /* Đặt độ mờ của lớp phủ */
+}

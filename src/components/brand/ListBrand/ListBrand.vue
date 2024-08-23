@@ -159,7 +159,7 @@ const refreshData = () => {
 };
 
 const handleAddNew = async () => {
-  const { value: text } = await Swal.fire({
+  const { value: text , isConfirmed } = await Swal.fire({
     input: 'textarea',
     inputLabel: 'Nhập tên nhãn hiệu mới',
     inputPlaceholder: 'Nhãn hiệu a...',

@@ -17,9 +17,17 @@
       <div class="container">
         <img src="@/assets/images/logo.png" class="header__images" />
 
-        <input type="text" placeholder="Nhập từ khóa tìm kiếm..." class="header__input" />
+        <input 
+          type="text" 
+          placeholder="Nhập từ khóa tìm kiếm..." 
+          class="header__input"
+          @focus="handleFocus"
+          v-model="inputValue"
+          @blur="hideList()"
+          @keyup.enter="search"
+          />
 
-        <button class="button__search">
+        <button class="button__search" @click="search">
           <SearchIcon class="icon__search"></SearchIcon>
         </button>
 
@@ -42,8 +50,18 @@ import { UserIcon, SearchIcon, StoreIcon, CartIcon } from '@/assets/icons/icon.j
 import { useAuthStore } from '@/stores/authStore';
 import router from '@/router/index.js';
 import Modal from '@/components/modal/ModalView.vue';
+import { ref } from 'vue';
+import { eventBus } from '@/utils/eventBusHeader.js'; 
 
+
+
+const inputValue = ref('');
 const authStore = useAuthStore();
+
+const search = () => {
+  eventBus.searchQuery = inputValue.value;
+  console.log("test console log header",eventBus.searchQuery )
+};
 
 const goToLogin = () => {
   router.push({ path: '/login/user' });

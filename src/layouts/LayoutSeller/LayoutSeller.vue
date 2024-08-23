@@ -85,18 +85,6 @@ const items = reactive([
     title: 'Trang chủ'
   },
   {
-    key: '2',
-    icon: () => h(DesktopOutlined),
-    label: 'Quản lý danh mục',
-    title: 'Quản lý danh mục'
-  },
-  {
-    key: '3',
-    icon: () => h(InboxOutlined),
-    label: 'Quản lý nhãn hiệu',
-    title: 'Quản lý nhãn hiệu'
-  },
-  {
     key: 'sub1',
     icon: () => h(ShoppingCartOutlined),
     label: 'Quản lý sản phẩm',

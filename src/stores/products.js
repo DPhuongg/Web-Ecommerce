@@ -12,9 +12,9 @@ export const productStore = defineStore('products', {
   }),
 
   actions: {
-    async fetchProducts() {
+    async fetchProducts(keyword='',sort='',fromPrice='', toPrice='',brandId='', selectedCategories='', selectStar='') {
       try {
-        const response = await apiServices.getAllProduct();
+        const response = await apiServices.getAllProduct(keyword,sort, fromPrice,toPrice,brandId,selectedCategories, selectStar);
         this.products = response.data.data.productResponses;
         console.log(this.products);
       } catch (err) {

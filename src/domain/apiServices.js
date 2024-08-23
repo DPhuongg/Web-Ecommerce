@@ -20,8 +20,8 @@ export default {
   },
 
   //PRODCUT USER
-  getAllProduct() {
-    return httpAuth.get(config.baseApiUrl + '/api/products/user');
+  getAllProduct(keyword,sort,fromPrice, toPrice, brandId,categoryIds,selectStar) {
+    return httpAuth.get(config.baseApiUrl + `/api/products/user?sort=${sort}&keyword=${keyword}&fromPrice=${fromPrice}&toPrice=${toPrice}&brand-ids=${brandId}&category-ids=${categoryIds}&rate=${selectStar}`);
   },
 
   //CATEGORY
@@ -57,6 +57,9 @@ export default {
   },
   getShopById(id){
     return httpAuth.get(`${config.baseApiUrl}/api/v1/shop/${id}`);
+  },
+  getBasicInfo(){
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/seller/basicInfor`);
   },
 
   //WAREHOUSE
@@ -153,5 +156,38 @@ export default {
   },
   getItemCart(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
+  },
+  //ATTRIBUTE
+  createAttributeProduct(attribute,id) {
+    return httpAuth.post(`${config.baseApiUrl}/api/v1/product-attribute/${id}`, attribute);
+  },
+
+  getListAttributeProduct(id){
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/product-attribute/all-product-attribute/${id}`); 
+  },
+
+  deleteAttributeProduct(id){
+    return httpAuth.delete(`${config.baseApiUrl}/api/v1/product-attribute/${id}`);
+  },
+
+  //AttRIBUTE VALUES
+  createAttributeValues(attributeValue){
+    return httpAuth.post(`${config.baseApiUrl}/api/attribute-values`, attributeValue);
+  },
+
+  getListAttributeValues(id){
+    return httpAuth.get(`${config.baseApiUrl}/api/attribute-values/${id}`); 
+  },
+
+  //PRODUCT ITEM 
+  getListProductItem(id,page, size) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/list-sku/${id}?page=${page - 1}&size=${size}`);
+  },
+  deleteProductItem(id) {
+    return httpAuth.delete(`${config.baseApiUrl}/api/v1/sku/${id}`);
+  },
+
+  createProductItem(formData){
+    return httpAuth.post(`${config.baseApiUrl}/api/v1/sku`, formData);
   }
 };

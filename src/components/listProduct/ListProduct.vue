@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="p-4">
-          <h4 class="text-[16px] font-medium truncate mb-1">{{ product.description }}</h4>
+          <h4 class="text-[16px] font-medium truncate mb-1">{{ product.name }}</h4>
           <p class="text-[18px] font-semibold text-[#EE4D2D]">
             <!-- {{ product.price }} -->
             {{ formatCurrency(product.min_price) }}
@@ -28,11 +28,20 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch, ref } from 'vue';
 import { productStore } from '@/stores/products';
 import { StartIcon } from '@/assets/icons/icon.js';
+import { eventBus } from '@/utils/eventBusHeader.js'; 
+
+const searchQuery = ref(eventBus.searchQuery);
 
 const store = productStore();
+const props = defineProps({
+  filter: {
+    type: Object,
+    default: () => ({})
+  }
+});
 
 const productData = computed(() => ({
   dataSource: store.products,
@@ -45,8 +54,35 @@ const formatCurrency = (value) => {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
 };
 
+// const fetchProducts = async () => {
+//   await store.fetchProducts('',props.option,);
+//   productData.dataSource = store.products
+// };
+
+// watch(() => props.option, fetchProducts, { immediate: true });
+
+// watch(() => props.filter, fetchProducts, { immediate: true });
+
+watch(() => eventBus.searchQuery, (newQuery) => {
+    console.log("fetch for search")
+  searchQuery.value = newQuery;
+  store.fetchProducts(searchQuery.value,props.option);
+  productData.dataSource = store.products
+});
+
+
+watch(
+  () => props.filter,
+  (newFilter, oldFilter) => {
+    console.log('Filter changed:', newFilter);
+    store.fetchProducts(searchQuery.value,newFilter.sort,newFilter.fromPrice,newFilter.toPrice,newFilter.selectedBrand.join(','), newFilter.selectedCategories.join(','),newFilter.selectStar);
+    productData.dataSource = store.products
+  },
+  { deep: true }
+);
+
 onMounted(async () => {
-  store.fetchProducts();
+  await store.fetchProducts();
 });
 </script>
 

@@ -9,17 +9,17 @@ const seller = [
         component: () => import('../components/dashBoard/DashBoard.vue')
       },
 
-      {
-        path: 'category',
-        name: 'menu-2',
-        component: () => import('../components/category/ListCategory/ListCategory.vue')
-      },
+      // {
+      //   path: 'category',
+      //   name: 'menu-2',
+      //   component: () => import('../components/category/ListCategory/ListCategory.vue')
+      // },
 
-      {
-        path: 'brand',
-        name: 'menu-3',
-        component: () => import('../components/brand/ListBrand/ListBrand.vue')
-      },
+      // {
+      //   path: 'brand',
+      //   name: 'menu-3',
+      //   component: () => import('../components/brand/ListBrand/ListBrand.vue')
+      // },
 
       {
         path: 'list-warehouse',

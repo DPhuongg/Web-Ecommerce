@@ -84,8 +84,8 @@ export const useProductStore = defineStore('products', {
     async fetchProduct(id) {
       console.log("load product by id", id)
       const response = await apiServices.getProduct(id);
-      console.log("call api product", response)
       this.product = response.data.data;
+      console.log("call api product nhé", this.product)
     },
 
     async updateProduct(product,id) {
