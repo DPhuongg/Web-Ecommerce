@@ -23,6 +23,18 @@ export default {
   getAllProduct() {
     return httpAuth.get(config.baseApiUrl + '/api/products/user');
   },
+  getProductById(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/products/${id}`);
+  },
+  getQuantityByAttribute(id, ans) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/values/ok/${id}?values-ids=${ans}`);
+  },
+  addCart(id, quantity) {
+    return httpAuth.post(config.baseApiUrl + '/api/cart-items', { productItemId: id, quantity: quantity });
+  },
+  quantityCart() {
+    return httpAuth.get(config.baseApiUrl + '/api/cart-items/quantity');
+  },
 
   //CATEGORY
   getAllCategory(page, size, search = '') {
@@ -55,7 +67,7 @@ export default {
   updateShopInfo(newShopInfo) {
     return httpAuth.put(config.baseApiUrl + '/api/v1/shop', newShopInfo);
   },
-  getShopById(id){
+  getShopById(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/shop/${id}`);
   },
 
@@ -123,5 +135,18 @@ export default {
   },
   getItemCart(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
+  },
+  updateCartItem(id, quantity) {
+    return httpAuth.put(config.baseApiUrl + '/api/cart-items/update', { id: id, quantity: quantity });
+  },
+  deleteCartItem(id){
+    return httpAuth.delete(`${config.baseApiUrl}/api/cart-items/${id}`);
+  },
+
+
+
+  //VOUCHER
+  getAllVoucher(){
+    return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getAllVouchers`);
   }
 };

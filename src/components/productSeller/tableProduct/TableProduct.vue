@@ -144,7 +144,6 @@ const handleAddNew = () => {
   router.push({name: 'menu-5'});
 }
 const editItem = (id) => {
-  console.log('Edit item with id:', id);
   router.push({ name: 'product-detail', params: { id } });
 };
 

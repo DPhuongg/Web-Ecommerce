@@ -4,7 +4,6 @@ import Swal from 'sweetalert2';
 import router from '@/router/index.js';
 import _ from 'lodash';
 
-
 export const useProductStore = defineStore('products', {
   state: () => ({
     products: [],
@@ -36,7 +35,7 @@ export const useProductStore = defineStore('products', {
         stt: (page - 1) * this.pageSize + index + 1
       }));
 
-      console.log( this.products);
+      console.log(this.products);
 
       this.totalElements = response.data.data.totalPages * this.pageSize;
     },
@@ -65,10 +64,22 @@ export const useProductStore = defineStore('products', {
     },
 
     async addProduct(product) {
+      Swal.fire({
+        title: 'Đang thêm sản phẩm...',
+        text: 'Vui lòng chờ...',
+        icon: 'info',
+        allowOutsideClick: false, 
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
       this.productForm = { ...product };
       console.log(this.productForm);
       const formData = this.createFormData();
       const response = await apiServices.createProduct(formData);
+      Swal.close();
+
       if (response.data.code === 200) {
         router.push({ name: 'menu-4' });
         Swal.fire({
