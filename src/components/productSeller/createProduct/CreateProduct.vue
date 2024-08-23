@@ -44,8 +44,8 @@
           style="width: 100%"
           :options="brands"
           :filter-option="(input, option) => option.label.toLowerCase().includes(input.toLowerCase())"
-          @search="fetchCategory"
           @change="handleChangeOne"
+          @search="debouncedFetchBrand"
         ></a-select>
       </div>
 
@@ -59,7 +59,7 @@
           style="width: 100%"
           :options="categories"
           :filter-option="(input, option) => option.label.toLowerCase().includes(input.toLowerCase())"
-          @search="fetchCategory"
+          @search="debouncedFetchCategory"
           @change="handleChangeTwo"
         ></a-select>
       </div>
@@ -78,6 +78,7 @@ import Swal from 'sweetalert2';
 
 import { ref, onMounted, reactive } from 'vue';
 import { useProductStore } from '@/stores/productSellerStore';
+import debounce from 'lodash/debounce';
 
 const productStore = useProductStore();
 
@@ -107,7 +108,7 @@ const fetchBrand = async (searchText) => {
 };
 
 const fetchCategory = async (searchText) => {
-  console.log(searchText);
+  // console.log(searchText);
   const response = await apiServices.getAllCategory(1, 10, searchText);
   categories.value = response.data.data.content.map((category) => ({
     value: category.id,
@@ -134,8 +135,10 @@ function handleImageUpload(event) {
   const files = event.target.files;
 
   if (files.length === 0) return;
-  
-  if (product.images.length >= MAX_IMAGES) {
+
+  const remainingSlots = MAX_IMAGES - product.images.length;
+
+  if (remainingSlots <= 0) {
     Swal.fire({
       icon: 'error',
       title: 'Oops...',
@@ -144,7 +147,6 @@ function handleImageUpload(event) {
     return;
   }
 
-  const remainingSlots = MAX_IMAGES - product.images.length;
   const filesToUpload = Math.min(files.length, remainingSlots);
 
   for (let i = 0; i < filesToUpload; i++) {
@@ -155,15 +157,25 @@ function handleImageUpload(event) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const imagePreviewUrl = e.target.result;
-      imagesView.value.push(imagePreviewUrl); 
+      imagesView.value.push(imagePreviewUrl);
     };
     reader.readAsDataURL(file);
   }
+
+  event.target.value = '';
 }
 
 const handleClick = () => {
   productStore.addProduct(product);
 };
+
+const debouncedFetchCategory = debounce((searchText) => {
+  fetchCategory(searchText);
+}, 1000);
+
+const debouncedFetchBrand = debounce((searchText) => {
+  fetchBrand(searchText);
+}, 1000);
 
 onMounted(async () => {
   await fetchBrand();

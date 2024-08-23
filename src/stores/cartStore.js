@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import apiServices from '@/domain/apiServices';
 import _ from 'lodash';
-import axios from 'axios';
+import Swal from 'sweetalert2';
+import { productStore } from '@/stores/products';
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -19,6 +20,15 @@ export const useCartStore = defineStore('cart', {
     },
 
     async fetchCartItems(page = 1) {
+      Swal.fire({
+        title: 'Loading...',
+        text: 'Vui lòng chờ...',
+        icon: 'info',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
       try {
         const response = await apiServices.getAllCart(page);
         const content = response.data.data.content;
@@ -40,24 +50,50 @@ export const useCartStore = defineStore('cart', {
 
         // Chờ tất cả các promises hoàn thành
         this.cartItems = await Promise.all(promises);
+        Swal.close();
         this.totalElements = response.data.data.totalElements;
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
     },
 
+    async updateCartItem(id, quantity) {
+      await apiServices.updateCartItem(id, quantity);
+    },
 
+    async deleteCart(id) {
+      const result = await Swal.fire({
+        title: 'Bạn chắc chắn muốn xóa sản phảm này?',
+        text: 'Bạn sẽ không thể hoàn tác thao tác này!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Xác nhận!'
+      });
 
-    removeItem(index) {
-      this.cartItems.splice(index, 1);
-    }
-  },
+      if (result.isConfirmed) {
+        const response = await apiServices.deleteCartItem(id);
+        if (response.data.code === 200) {
+          this.currentPage = 1;
+          const store = productStore();
+          store.fetchCart();
+          await this.fetchCartItems();
+          await Swal.fire({
+            title: 'Deleted!',
+            text: 'Xóa thành công',
+            icon: 'success'
+          });
+        }
+      }
+    },
 
-  getters: {
-    cartTotalPrice(state) {
-      return state.cartItems.reduce((total, item) => {
-        return total + item.quantity * item.productDetails.price;
-      }, 0);
+    getters: {
+      cartTotalPrice(state) {
+        return state.cartItems.reduce((total, item) => {
+          return total + item.quantity * item.productDetails.price;
+        }, 0);
+      }
     }
   }
 });

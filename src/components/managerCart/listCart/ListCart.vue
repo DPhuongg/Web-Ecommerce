@@ -89,6 +89,7 @@
 import { onMounted, computed } from 'vue';
 import { useCartStore } from '@/stores/cartStore';
 import { TrashIcon } from '@/assets/icons/icon.js';
+import { debounce } from 'lodash';
 
 const cartStore = useCartStore();
 
@@ -128,6 +129,12 @@ const columns = [
   },
   {
     title: 'Giá',
+    dataIndex: ['productDetails', 'price'],
+    key: 'price_item',
+    slots: { customRender: 'price' }
+  },
+  {
+    title: 'Thành tiền',
     dataIndex: ['productDetails', 'price'],
     key: 'price'
   },
@@ -174,7 +181,15 @@ const handleCheckboxChange = (id, checked) => {
   }
 };
 
-const removeItem = cartStore.removeItem;
+const deleteCart = (id) => {
+  cartStore.deleteCart(id);
+};
+
+const updateQuantity = debounce((productId, quantity) => {
+  if (productId && quantity > 0) {
+    cartStore.updateCartItem(productId, quantity);
+  }
+}, 300);
 
 const decreaseQuantity = (record) => {
   const item = cartStore.cartItems.find((i) => i.id === record.id);
@@ -187,6 +202,8 @@ const decreaseQuantity = (record) => {
       cartStore.totalPrice -= previousTotalPrice - newTotalPrice;
     }
   }
+
+  updateQuantity(item.id, item.quantity);
 };
 
 const increaseQuantity = (record) => {
@@ -200,13 +217,13 @@ const increaseQuantity = (record) => {
       cartStore.totalPrice += newTotalPrice - previousTotalPrice;
     }
   }
-};
 
-const cartTotalPrice = cartStore.cartTotalPrice;
+  updateQuantity(item.id, item.quantity);
+};
 
 onMounted(async () => {
   await cartStore.fetchCartItems();
-  cartItems.value = cartStore.cartItems;
+  // cartItems.value = cartStore.cartItems;
 });
 </script>
 

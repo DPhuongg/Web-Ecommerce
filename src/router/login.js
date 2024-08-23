@@ -1,7 +1,7 @@
 const login = [
   {
     path: '/login/user',
-    name: 'HomeUser',
+    name: 'login-user',
     component: () => import('../pages/login/LoginViewUser.vue')
   },
   {
