@@ -33,9 +33,18 @@ export const useAuthStore = defineStore({
       }
     },
 
-    async registerUser({ fullName, email, password, role }) {
+    async registerUser({ fullName, email, password, role, country, province, district, commune, address_detail }) {
       try {
-        const response = await authService.register(fullName, email, password, role);
+        if (Array.isArray(role) && role.includes('seller')) {
+          role = 'seller';
+        }
+        const response = await authService.register(fullName, email, password, role, {
+          country,
+          province,
+          district,
+          commune,
+          address_detail
+        });
 
         this.token = response.data.token; // Lưu token vào store
         localStorage.setItem('token', response.data.token); // Lưu token vào localStorage
@@ -85,6 +94,33 @@ export const useAuthStore = defineStore({
           }
         } else {
           console.log('Lỗi mạng');
+        }
+      }
+    },
+
+    async registerSeller({ fullName, email, password, role, country, province, district, commune, address_detail }) {
+      try {
+        const response = await authService.register(fullName, email, password, role, {
+          country,
+          province,
+          district,
+          commune,
+          address_detail
+        });
+
+        this.token = response.data.token; // Lưu token vào store
+        localStorage.setItem('token', response.data.token); // Lưu token vào localStorage
+
+        router.push({ path: `/${role}/home` });
+      } catch (error) {
+        const status = error.response.status;
+        if (status === 400) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'User with this email already existed',
+            footer: '<a href="#">Why do I have this issue?</a>'
+          });
         }
       }
     },
