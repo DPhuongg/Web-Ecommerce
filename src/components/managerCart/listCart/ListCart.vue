@@ -42,7 +42,41 @@
           <template v-if="column.key === 'shop_name'">
             <div class="flex flex-col">
               {{ record.shopDetails.name }}
-              <a href="#" @click="applyDiscountCode(record.shopDetails.id)" class="text-[13px] text-[#FB884B] underline mt-2">Mã giảm giá</a>
+              <a-popover
+                v-model:visible="visible[record.id]"
+                placement="bottom"
+                trigger="click"
+                @visible-change="(newVisible) => handleVisibleChange(newVisible, record.shopId)"
+              >
+                <template #content>
+                  <div class="overflow-y-auto max-h-60">
+                    <div
+                      v-for="discount in voucherData"
+                      :key="discount.id"
+                      :class="{
+                        'border border-[#F45449]': selectedDiscountIds[record.id] === discount.id,
+                        'border border-[#EEEEEE]': selectedDiscountIds[record.id] !== discount.id
+                      }"
+                      class="mb-3 p-3 rounded-md text-[15px]"
+                    >
+                      <a href="#" @click="applyDiscount(record, discount.id)">
+                        {{ discount.coupon_code }}
+                        Giảm
+                        <span v-if="discount.discount_type === 'FIXEDAMOUNT'" class="text-[18px] text-[#F45449]"
+                          >-{{ discount.discount_value.toLocaleString() }}đ</span
+                        >
+                        <span v-else-if="discount.discount_type === 'PERCENTAGE'" class="text-[18px] text-[#F45449]"
+                          >{{ discount.discount_value }}%</span
+                        >
+                        <p class="text-[13px] text-[#7A7A7A]">Đơn tối thiếu 0đ</p>
+                        <p class="mt-2 text-[#7A7A7A]">HSD: {{ format(parseISO(discount.expired_at), 'dd/MM/yyyy HH:mm') }}</p>
+                      </a>
+                      <br />
+                    </div>
+                  </div>
+                </template>
+                <a href="#" @click.prevent class="text-[13px] text-[#FB884B] underline mt-2"> Mã giảm giá </a>
+              </a-popover>
             </div>
           </template>
 
@@ -51,7 +85,7 @@
           </template>
 
           <template v-else-if="column.key === 'price'">
-            {{ formatCurrency(record.productDetails.price * record.quantity) }}
+            {{ formatCurrency(record.totalPrice) }}
           </template>
 
           <template v-else-if="column.key === 'actions'">
@@ -63,7 +97,13 @@
           <template v-else-if="column.key === 'quantity'">
             <div class="quantity-controls">
               <button @click="decreaseQuantity(record)" class="text-[20px]">-</button>
-              <input v-model.number="record.quantity" min="1" style="width: 60px; text-align: center" class="outline-none" />
+              <input
+                @keyup="onKeyUp(record.id, record.quantity)"
+                v-model.number="record.quantity"
+                min="1"
+                style="width: 60px; text-align: center"
+                class="outline-none"
+              />
               <button @click="increaseQuantity(record)" class="text-[20px]">+</button>
             </div>
           </template>
@@ -80,16 +120,19 @@
     <div class="container z-30 flex justify-end pt-[25px] pb-[25px] items-center">
       <span class="text-[22px] font-medium mr-4">Tổng thanh toán</span>
       <span class="text-[25px] text-[#F45449] font-medium mr-[40px]">{{ cartData.total }}</span>
-      <button class="text-[#fff] bg-[#2A7E6F] p-3 pl-5 pr-5 rounded-lg">Thanh toán</button>
+      <button @click="handlePayment" class="text-[#fff] bg-[#2A7E6F] p-3 pl-5 pr-5 rounded-lg">Thanh toán</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useCartStore } from '@/stores/cartStore';
 import { TrashIcon } from '@/assets/icons/icon.js';
 import { debounce } from 'lodash';
+import apiServices from '@/domain/apiServices';
+import { format, parseISO } from 'date-fns';
+import Swal from 'sweetalert2';
 
 const cartStore = useCartStore();
 
@@ -163,22 +206,26 @@ const handleTableChange = (pagination) => {
   });
 };
 
+const selectedCartItems = ref([]);
+
 const handleCheckboxChange = (id, checked) => {
-  console.log(checked);
-  const item = cartStore.cartItems.find((item) => item.id === id);
+  const item = cartData.value.dataSource.find((item) => item.id === id);
 
   if (item) {
-    const itemTotalPrice = item.quantity * item.productDetails.price;
-
     if (checked) {
-      cartStore.totalPrice += itemTotalPrice;
-    } else {
-      cartStore.totalPrice -= itemTotalPrice;
-      if (cartStore.totalPrice < 0) {
-        cartStore.totalPrice = 0;
+      if (!selectedCartItems.value.includes(id)) {
+        selectedCartItems.value.push(id);
+        cartStore.totalPrice += item.totalPrice;
       }
+    } else {
+      selectedCartItems.value = selectedCartItems.value.filter((itemId) => itemId !== id);
+      cartStore.totalPrice -= item.totalPrice;
+    }
+    if (cartStore.totalPrice < 0) {
+      cartStore.totalPrice = 0;
     }
   }
+  console.log();
 };
 
 const deleteCart = (id) => {
@@ -221,9 +268,67 @@ const increaseQuantity = (record) => {
   updateQuantity(item.id, item.quantity);
 };
 
+const timeoutId = ref(null);
+
+function onKeyUp(productId, quantity) {
+  if (timeoutId.value) {
+    clearTimeout(timeoutId.value);
+  }
+  timeoutId.value = setTimeout(() => {
+    console.log(productId);
+    updateQuantity(productId, quantity);
+    console.log(quantity);
+  }, 100);
+}
+
+const visible = ref({});
+
+const voucherData = ref({});
+
+async function handleVisibleChange(newVisible, id) {
+  visible.value[id] = newVisible;
+  console.log(newVisible);
+  if (newVisible) {
+    const response = await apiServices.getUserVoucher(id);
+    voucherData.value = response.data.data;
+  }
+}
+
+const selectedDiscountIds = ref({});
+async function applyDiscount(record, discountId) {
+  if (selectedDiscountIds.value[record.id] === discountId) {
+    selectedDiscountIds.value[record.id] = null;
+  } else {
+    selectedDiscountIds.value[record.id] = discountId;
+  }
+  await apiServices.addVoucher(record.id, selectedDiscountIds.value[record.id]);
+  // console.log(res1);
+  const res = await apiServices.getCartPrice(record.id);
+  // console.log(res);
+  record.totalPrice = res.data.data;
+  console.log(record.totalPrice);
+}
+
+const handlePayment = async () => {
+  Swal.fire({
+    title: 'Loading...',
+    text: 'Vui lòng chờ...',
+    icon: 'info',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+  // console.log(selectedCartItems.value);
+  const res = await apiServices.payment(selectedCartItems.value);
+  console.log(res);
+  if (res.data.code === 200) {
+    Swal.close();
+    window.location.href = res.data.data.url;
+  }
+};
 onMounted(async () => {
   await cartStore.fetchCartItems();
-  // cartItems.value = cartStore.cartItems;
 });
 </script>
 

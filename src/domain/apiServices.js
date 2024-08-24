@@ -139,14 +139,30 @@ export default {
   updateCartItem(id, quantity) {
     return httpAuth.put(config.baseApiUrl + '/api/cart-items/update', { id: id, quantity: quantity });
   },
-  deleteCartItem(id){
+  deleteCartItem(id) {
     return httpAuth.delete(`${config.baseApiUrl}/api/cart-items/${id}`);
   },
 
-
-
   //VOUCHER
-  getAllVoucher(){
+  getAllVoucher() {
     return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getAllVouchers`);
+  },
+  getUserVoucher(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getVouchers/${id}`);
+  },
+  addVoucher(itemId, id) {
+    console.log(itemId, id);
+    return httpAuth.post(config.baseApiUrl + '/api/cart-items/apply-voucher', { cartItemId: itemId, voucherId: id });
+  },
+  getCartPrice(itemId) {
+    return httpAuth.get(`${config.baseApiUrl}/api/checkout/total-price?selectedCartItems=${itemId}`);
+  },
+
+  payment(selectedCartItems) {
+    return httpAuth.post(config.baseApiUrl + '/api/checkout/checkout_cart', {
+      selectedCartItems: selectedCartItems,
+      method: true,
+      note: 'Ghi chú thanh toán'
+    });
   }
 };

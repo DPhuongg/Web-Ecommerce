@@ -138,6 +138,10 @@ const columns = [
   }
 ];
 
+const handleAddNew = () => {
+  router.push()
+}
+
 onMounted(async () => {
   voucherStore.fetchVouchers();
 });
