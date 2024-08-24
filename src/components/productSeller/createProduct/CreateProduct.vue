@@ -99,7 +99,7 @@ const product = reactive({
 
 const imagesView = ref([]);
 
-const fetchBrand = async (searchText) => {
+const fetchBrand = async (searchText="") => {
   const response = await apiServices.getAllBrand(1, 10, searchText);
   brands.value = response.data.data.content.map((category) => ({
     value: category.id,

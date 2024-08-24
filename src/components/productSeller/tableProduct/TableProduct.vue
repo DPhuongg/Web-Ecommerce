@@ -36,7 +36,7 @@
       >
         <template #bodyCell="{ column, record }">
           <span v-if="column.key === 'actions'" class="flex">
-            <a href="#" @click.prevent="editItem(record.id)" class="mr-4">
+            <a href="#" @click.prevent="watchItem(record.id)" class="mr-4">
               <EyeIcon class="w-[15px] h-[15px]" />
             </a>
             <a-divider type="vertical" />
@@ -65,6 +65,12 @@
             </div>
           </span>
 
+          <span v-else-if="column.key === 'name'">
+            <a href="#" @click.prevent="navigateToDetail(record.id)">
+              {{ record[column.dataIndex] }}
+            </a>
+          </span>
+
           <span v-else>
             {{ record[column.dataIndex] }}
           </span>
@@ -75,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted , reactive} from 'vue';
 import { format } from 'date-fns';
 import { SearchIcon, AddIcon, EditIcon, TrashIcon, EyeIcon } from '@/assets/icons/icon.js';
 import router from '@/router/index.js';
@@ -119,14 +125,17 @@ const columns = [
 ];
 
 import { useProductStore } from '@/stores/productSellerStore';
+import { useRoute } from 'vue-router';
 
 const productStore = useProductStore();
 const searchQuery = ref('');
+const route = useRoute();
+// const currentPage = ref(Number(route.query.page) || 1);
 
 const productData = computed(() => ({
   dataSource: productStore.products,
   totalElements: productStore.totalElements,
-  currentPage: productStore.currentPage,
+  currentPage:productStore.currentPage,
   pageSize: productStore.pageSize
 }));
 
@@ -143,13 +152,22 @@ const handleAction = () => {
 const handleAddNew = () => {
   router.push({name: 'menu-5'});
 }
+
 const editItem = (id) => {
+  router.push({ name: 'product-edit', params: { id } });
+};
+
+const watchItem = (id) => {
   router.push({ name: 'product-detail', params: { id } });
 };
 
 const deleteItem = (id) => {
-  console.log('Edit item with id:', id);
+    productStore.deleteProduct(id);
 };
+
+const navigateToDetail = (id) => {
+  router.push({ name: 'product-item', params: { id } });
+}
 
 onMounted(async () => {
   productStore.fetchProducts();

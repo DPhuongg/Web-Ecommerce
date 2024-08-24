@@ -41,9 +41,22 @@ const admin = [
 
       {
         path: 'add-user',
-        name: 'admin-menu-7',
+        name: 'menu-7',
         component: () => import('../components/managerUsers/addUser/AddUser.vue')
       },
+
+      {
+        path: 'category',
+        name: 'admin-menu-2',
+        component: () => import('../components/category/ListCategory/ListCategory.vue')
+      },
+
+      {
+        path: 'brand',
+        name: 'admin-menu-3',
+        component: () => import('../components/brand/ListBrand/ListBrand.vue')
+      },
+
     ]
   }
 ];

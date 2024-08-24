@@ -12,14 +12,21 @@ export const productStore = defineStore('products', {
   }),
 
   actions: {
-    async fetchProducts() {
-      const response = await apiServices.getAllProduct();
-      this.products = response.data.data.productResponses;
+    async fetchProducts(keyword='',sort='',fromPrice='', toPrice='',brandId='', selectedCategories='', selectStar='') {
+      try {
+        const response = await apiServices.getAllProduct(keyword,sort, fromPrice,toPrice,brandId,selectedCategories, selectStar);
+        this.products = response.data.data.productResponses;
+        console.log(this.products);
+      } catch (err) {
+        this.error = 'Faliled';
+        console.log(err);
+      } finally {
+        this.isLoading = false; // Đặt lại trạng thái loading
+      }
     },
-
     async fetchCart() {
       const response = await apiServices.quantityCart();
       this.itemCount = response.data.data;
-    }
+      }
   }
 });

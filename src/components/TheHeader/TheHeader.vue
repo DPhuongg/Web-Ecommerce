@@ -17,9 +17,17 @@
       <div class="container flex items-center">
         <img src="@/assets/images/logo.png" class="header__images" />
 
-        <input type="text" placeholder="Nhập từ khóa tìm kiếm..." class="header__input" />
+        <input 
+          type="text" 
+          placeholder="Nhập từ khóa tìm kiếm..." 
+          class="header__input"
+          @focus="handleFocus"
+          v-model="inputValue"
+          @blur="hideList()"
+          @keyup.enter="search"
+          />
 
-        <button class="button__search mr-3">
+        <button class="button__search mr-3" @click="search">
           <SearchIcon class="icon__search"></SearchIcon>
         </button>
 
@@ -50,12 +58,23 @@ import router from '@/router/index.js';
 import { productStore } from '@/stores/products';
 import { computed, onMounted } from 'vue';
 // import Modal from '@/components/modal/ModalView.vue';
+import Modal from '@/components/modal/ModalView.vue';
+import { ref } from 'vue';
+import { eventBus } from '@/utils/eventBusHeader.js'; 
 
+
+
+const inputValue = ref('');
 const authStore = useAuthStore();
 
 const store = productStore();
 
 const cartCount = computed(() => store.itemCount);
+
+const search = () => {
+  eventBus.searchQuery = inputValue.value;
+  console.log("test console log header",eventBus.searchQuery )
+};
 
 const goToLogin = () => {
   router.push({ path: '/login/user' });

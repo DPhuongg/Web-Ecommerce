@@ -9,17 +9,17 @@ const seller = [
         component: () => import('../components/dashBoard/DashBoard.vue')
       },
 
-      {
-        path: 'category',
-        name: 'menu-2',
-        component: () => import('../components/category/categoryMain/CategoryView.vue')
-      },
+      // {
+      //   path: 'category',
+      //   name: 'menu-2',
+      //   component: () => import('../components/category/ListCategory/ListCategory.vue')
+      // },
 
-      {
-        path: 'brand',
-        name: 'menu-3',
-        component: () => import('../components/brand/BrandView.vue')
-      },
+      // {
+      //   path: 'brand',
+      //   name: 'menu-3',
+      //   component: () => import('../components/brand/ListBrand/ListBrand.vue')
+      // },
 
       {
         path: 'list-warehouse',
@@ -42,13 +42,15 @@ const seller = [
       {
         path: 'list-product',
         name: 'menu-4',
-        component: () => import('../components/productSeller/tableProduct/TableProduct.vue')
+        component: () => import('../components/productSeller/tableProduct/TableProduct.vue'),
+        props: (route) => ({ page: route.query.page || 1 })
       },
 
       {
         path: 'product-detail/:id',
         name: 'product-detail',
-        component: () => import('../components/productSeller/productDetail/ProductDetail.vue')
+        component: () => import('../components/productSeller/productDetail/ProductDetail.vue'),
+        props: (route) => ({ page: route.query.id})
       },
 
       {
@@ -80,12 +82,30 @@ const seller = [
         name: 'menu-5',
         component: () => import('../components/productSeller/createProduct/CreateProduct.vue')
       },
+      {
+        path: 'export-supply',
+        name: 'menu-16',
+        component: () => import('../components/supply/listImport/ListImport.vue')
+      },
 
       {
         path: 'test-scroll',
         name: 'test-scroll',
         component: () => import('../components/productSeller/test/testProduct.vue')
       },
+      {
+        path: 'product-item/:id',
+        name: 'product-item',
+        component: () => import('../pages/productItem/productItem.vue'),
+        props: (route) => ({ page: route.query.id})
+      },
+      {
+        path: 'product-edit/:id',
+        name: 'product-edit',
+        component: () => import('../components/productSeller/editProduct/editProduct.vue'),
+        props: (route) => ({ page: route.query.id})
+      }
+      ,
 
       
       {

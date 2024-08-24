@@ -7,6 +7,7 @@ import axios from 'axios';
 
 export const useSellersStore = defineStore('sellersStore', {
   state: () => ({
+    sellerInfo:[],
     sellers: [],
     totalElements: 0,
     currentPage: 1,
@@ -75,6 +76,11 @@ export const useSellersStore = defineStore('sellersStore', {
       } catch (error) {
         console.error('Lỗi khi xóa người bán:', error);
       }
-    }
+    },
+    async getBasicInfo() {
+      const response = await apiServices.getBasicInfo();
+      const content = response.data.data
+      this.sellerInfo = content;
+    },
   }
 });
