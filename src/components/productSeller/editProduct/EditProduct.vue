@@ -94,10 +94,13 @@ const productStore = useProductStore();
 const brands = ref([]);
 const brand = ref(productStore.product.brand_name);
 const category = ref([]);
-const defaultCategory = ref([])
+const defaultCategory = ref()
 const categories = ref([]);
 const route = useRoute();
 const id = ref(route.params.id);
+const imgUrl = []
+const imgFile = []
+const newImgFIle = []
 
 const product = reactive({
   name: productStore.product.name,
@@ -105,7 +108,8 @@ const product = reactive({
   status: productStore.product.status,
   brandId: productStore.product.brand_id,
   categoryIds:defaultCategory.value,
-  images: []
+  images: productStore.product.images,
+  images_text:[]
 });
 
 const imagesView = ref([]);
@@ -119,7 +123,6 @@ const fetchBrand = async (searchText="") => {
 };
 
 const fetchCategory = async (searchText="") => {
-  console.log("searchText",searchText);
   const response = await apiServices.getAllCategory(1, 10, searchText);
   categories.value = response.data.data.content.map((category) => ({
     value: category.id,
@@ -174,8 +177,26 @@ function handleImageUpload(event) {
   }
 }
 
-const handleClick = () => {
-  productStore.updateProduct(product,id.value);
+const handleClick = async() => {
+  product.images.map(image => {
+    if (typeof image === 'string') {
+      imgUrl.push(image)
+    } else if (image instanceof File || image instanceof Blob) {
+      imgFile.push(image)
+    } 
+  })
+  product.images = []
+  product.images = imgFile
+  product.images_text = imgUrl
+//   console.log("category", category)
+//   product.categoryIds = productStore.product.categories.map((category) => {
+//     console.log("category", category)
+//     return category;
+// });
+
+   productStore.updateProduct(product,id.value);
+    imgFile.length = 0; 
+    imgUrl.length = 0; 
 };
 
 onMounted(async () => {
@@ -184,6 +205,13 @@ onMounted(async () => {
         value: category.id,
         label: category.name
     }));
+      product.categoryIds = productStore.product.categories.map((category) => {
+    return category.id;})
+
+    // defaultCategory = productStore.product.categories.map((category) => (
+    //     category.id,
+    // ));
+
     imagesView.value = [...productStore.product.images];
     product.images = productStore.product.images
     // product.categoryIds = productStore.product.categories.map((category) => category.id);

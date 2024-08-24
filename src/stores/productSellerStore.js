@@ -18,7 +18,8 @@ export const useProductStore = defineStore('products', {
       status: '1',
       brandId: '',
       categoryIds: [],
-      images: []
+      images: [],
+      images_text:[]
     }
   }),
 
@@ -58,6 +59,11 @@ export const useProductStore = defineStore('products', {
         formData.append('images', image); // Lấy tên tệp từ đối tượng File
       });
 
+      this.productForm.images_text.forEach((images_text) => {
+        formData.append('imagesText', images_text); 
+        console.log("mmmmmmmmmmmmmmaaaaaaa",formData.images) // Lấy tên tệp từ đối tượng File
+      });
+
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
@@ -90,7 +96,8 @@ export const useProductStore = defineStore('products', {
 
     async updateProduct(product,id) {
       this.productForm = { ...product };
-      console.log("this.productForm.name",this.productForm.status);
+      console.log("this.productForm.name",this.productForm);
+      console.log("this.productForm.name product",product);
       const formData = this.createFormData();
       console.log("idddddđ", formData)
       const response = await apiServices.updateProduct(formData,id);

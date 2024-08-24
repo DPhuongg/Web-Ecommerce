@@ -74,8 +74,9 @@ export const useProductItemStore = defineStore('productItems', {
 
     async updateProductItem(productItem,id) {
       this.productItemForm = { ...productItem };
+      console.log("productItemForm",this.productItemForm)
       const formData = this.createFormData();
-      const response = await apiServices.updateProductItem(formData,id);
+      const response = await apiServices.updateProductItem(this.productItemForm);
       if (response.data.code === 200) {
         router.push({ name: 'menu-4' , query: { page: 1 } });
         Swal.fire({

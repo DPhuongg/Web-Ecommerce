@@ -1,25 +1,28 @@
+// src/utils/ModalStore.js
 import { reactive, provide, inject } from 'vue';
 
 const ModalSymbol = Symbol('ModalSymbol');
 
 export function createModalStore() {
   const state = reactive({
+    isModalVisible: false,
     currentItemId: null,
   });
 
-//   const showModal = (id) => {
-//     state.currentItemId = id;
-//     state.isModalVisible = true;
-//   };
+  const showModal = (id) => {
+    state.currentItemId = id; // Lưu ID vào store
+    state.isModalVisible = true;
+  };
 
-//   const hideModal = () => {
-//     state.isModalVisible = false;
-//   };
+  const hideModal = () => {
+    state.isModalVisible = false;
+    state.currentItemId = null; // Reset ID khi ẩn modal
+  };
 
   return {
-    state
-    // showModal,
-    // hideModal
+    state,
+    showModal,
+    hideModal
   };
 }
 

@@ -189,5 +189,22 @@ export default {
 
   createProductItem(formData){
     return httpAuth.post(`${config.baseApiUrl}/api/v1/sku`, formData);
-  }
+  },
+  getProductItem(id){
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
+  },
+  updateProductItem(formData){
+    return httpAuth.put(`${config.baseApiUrl}/api/v1/sku`,formData);
+  },
+  //FILE
+  // upLoadImage(formData){
+  //   return httpAuth.put(`${config.baseApiUrl}/api/products/uploads`, formData, {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data'
+  //     }
+  //   });
+  // },
+  // upLoadImageText(imageText){
+  //     return httpAuth.post(`${config.baseApiUrl}/api/v1/sku`, imageText);
+  // }
 };
