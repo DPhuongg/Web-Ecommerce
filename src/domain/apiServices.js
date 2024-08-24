@@ -23,6 +23,30 @@ export default {
   getAllProduct(keyword,sort,fromPrice, toPrice, brandId,categoryIds,selectStar) {
     return httpAuth.get(config.baseApiUrl + `/api/products/user?sort=${sort}&keyword=${keyword}&fromPrice=${fromPrice}&toPrice=${toPrice}&brand-ids=${brandId}&category-ids=${categoryIds}&rate=${selectStar}`);
   },
+  getProductById(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/products/${id}`);
+  },
+  getQuantityByAttribute(id, ans) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/values/ok/${id}?values-ids=${ans}`);
+  },
+  addCart(id, quantity) {
+    return httpAuth.post(config.baseApiUrl + '/api/cart-items', { productItemId: id, quantity: quantity });
+  },
+  quantityCart() {
+    return httpAuth.get(config.baseApiUrl + '/api/cart-items/quantity');
+  },
+  getProductById(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/products/${id}`);
+  },
+  getQuantityByAttribute(id, ans) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/values/ok/${id}?values-ids=${ans}`);
+  },
+  addCart(id, quantity) {
+    return httpAuth.post(config.baseApiUrl + '/api/cart-items', { productItemId: id, quantity: quantity });
+  },
+  quantityCart() {
+    return httpAuth.get(config.baseApiUrl + '/api/cart-items/quantity');
+  },
 
   //CATEGORY
   getAllCategory(page, size, searchQuery) {
@@ -55,7 +79,7 @@ export default {
   updateShopInfo(newShopInfo) {
     return httpAuth.put(config.baseApiUrl + '/api/v1/shop', newShopInfo);
   },
-  getShopById(id){
+  getShopById(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/shop/${id}`);
   },
   getBasicInfo(){
@@ -157,6 +181,36 @@ export default {
   getItemCart(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
   },
+  updateCartItem(id, quantity) {
+    return httpAuth.put(config.baseApiUrl + '/api/cart-items/update', { id: id, quantity: quantity });
+  },
+  deleteCartItem(id) {
+    return httpAuth.delete(`${config.baseApiUrl}/api/cart-items/${id}`);
+  },
+
+  //VOUCHER
+  getAllVoucher() {
+    return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getAllVouchers`);
+  },
+  getUserVoucher(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getVouchers/${id}`);
+  },
+  addVoucher(itemId, id) {
+    console.log(itemId, id);
+    return httpAuth.post(config.baseApiUrl + '/api/cart-items/apply-voucher', { cartItemId: itemId, voucherId: id });
+  },
+  getCartPrice(itemId) {
+    return httpAuth.get(`${config.baseApiUrl}/api/checkout/total-price?selectedCartItems=${itemId}`);
+  },
+
+  payment(selectedCartItems) {
+    return httpAuth.post(config.baseApiUrl + '/api/checkout/checkout_cart', {
+      selectedCartItems: selectedCartItems,
+      method: true,
+      note: 'Ghi chú thanh toán'
+    });
+  }
+  ,
   //ATTRIBUTE
   createAttributeProduct(attribute,id) {
     return httpAuth.post(`${config.baseApiUrl}/api/v1/product-attribute/${id}`, attribute);

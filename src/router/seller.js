@@ -105,6 +105,14 @@ const seller = [
         component: () => import('../components/productSeller/editProduct/editProduct.vue'),
         props: (route) => ({ page: route.query.id})
       }
+      ,
+
+      
+      {
+        path: 'list-voucher',
+        name: 'menu-6',
+        component: () => import('../components/voucher/voucherSeller/ListVoucher.vue')
+      },
     ]
   }
 ];

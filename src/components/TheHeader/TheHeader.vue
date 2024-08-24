@@ -9,12 +9,12 @@
       </div>
       <div v-if="authStore.isLoggedIn" class="flex">
         <button class="button" @click="logout">Đăng xuất</button>
-        <Modal></Modal>
+        <!-- <Modal></Modal> -->
       </div>
     </div>
 
     <div class="header__search">
-      <div class="container">
+      <div class="container flex items-center">
         <img src="@/assets/images/logo.png" class="header__images" />
 
         <input 
@@ -27,12 +27,18 @@
           @keyup.enter="search"
           />
 
-        <button class="button__search" @click="search">
+        <button class="button__search mr-3" @click="search">
           <SearchIcon class="icon__search"></SearchIcon>
         </button>
 
-        <button class="button__cart"  @click="handleCartClick">
-          <CartIcon class="icon__cart"></CartIcon>
+        <button class="button__cart flex items-center mr-3" @click="handleCartClick">
+          <div class="icon__wrapper flex relative">
+            <CartIcon class="icon__cart" />
+            <span
+              class="cart__count absolute top-[-12px] right-[1px] text-[#fff] bg-[#F11A27] rounded-full min-w-[25px] min-h-[25px] flex items-center justify-center text-[12px]"
+              >{{cartCount}}</span
+            >
+          </div>
           <span class="header__title">Giỏ hàng</span>
         </button>
 
@@ -49,6 +55,9 @@
 import { UserIcon, SearchIcon, StoreIcon, CartIcon } from '@/assets/icons/icon.js';
 import { useAuthStore } from '@/stores/authStore';
 import router from '@/router/index.js';
+import { productStore } from '@/stores/products';
+import { computed, onMounted } from 'vue';
+// import Modal from '@/components/modal/ModalView.vue';
 import Modal from '@/components/modal/ModalView.vue';
 import { ref } from 'vue';
 import { eventBus } from '@/utils/eventBusHeader.js'; 
@@ -57,6 +66,10 @@ import { eventBus } from '@/utils/eventBusHeader.js';
 
 const inputValue = ref('');
 const authStore = useAuthStore();
+
+const store = productStore();
+
+const cartCount = computed(() => store.itemCount);
 
 const search = () => {
   eventBus.searchQuery = inputValue.value;
@@ -73,12 +86,16 @@ const goToRegister = () => {
 
 const logout = () => {
   authStore.logout();
-  router.push({ path: '/home/user' });
+  router.push({ name: 'login-user' });
 };
 
 const handleCartClick = () => {
   router.push({ name: 'list-cart' });
-}
+};
+
+onMounted(async () => {
+  await store.fetchCart();
+});
 </script>
 
 <style scoped lang="scss">

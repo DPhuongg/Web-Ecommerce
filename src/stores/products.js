@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia';
 import apiServices from '@/domain/apiServices';
 
-import axios from 'axios';
 
 export const productStore = defineStore('products', {
   state: () => ({
     products: [],
     totalElements: 0,
     currentPage: 1,
-    pageSize: 10
+    pageSize: 10,
+    itemCount: 0
   }),
 
   actions: {
@@ -23,6 +23,10 @@ export const productStore = defineStore('products', {
       } finally {
         this.isLoading = false; // Đặt lại trạng thái loading
       }
-    }
+    },
+    async fetchCart() {
+      const response = await apiServices.quantityCart();
+      this.itemCount = response.data.data;
+      }
   }
 });
