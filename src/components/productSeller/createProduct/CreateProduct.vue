@@ -79,15 +79,18 @@ import Swal from 'sweetalert2';
 import { ref, onMounted, reactive } from 'vue';
 import { useProductStore } from '@/stores/productSellerStore';
 import debounce from 'lodash/debounce';
+import {useImageStore} from '@/stores/imageStore';
 
+
+
+const imageStore = useImageStore();
 const productStore = useProductStore();
-
 const brands = ref([]);
 const brand = ref('');
 const category = ref([]);
 const categories = ref([]);
 const status = ref('1');
-
+var fileText =[]
 const product = reactive({
   name: '',
   description: '',
@@ -107,13 +110,14 @@ const fetchBrand = async (searchText="") => {
   }));
 };
 
-const fetchCategory = async (searchText) => {
+const fetchCategory = async (searchText='') => {
   // console.log(searchText);
   const response = await apiServices.getAllCategory(1, 10, searchText);
   categories.value = response.data.data.content.map((category) => ({
     value: category.id,
     label: category.name
   }));
+  console.log("category đâu r",response )
 };
 
 const handleChangeOne = (selectedBrand) => {
@@ -128,12 +132,13 @@ const MAX_IMAGES = 8;
 
 function removeImage(index) {
   product.images.splice(index, 1);
+  fileText.splice(index,1)
+  fileText = fileText.filter(item => item);
   imagesView.value.splice(index, 1);
 }
 
-function handleImageUpload(event) {
+async function handleImageUpload(event) {
   const files = event.target.files;
-
   if (files.length === 0) return;
 
   const remainingSlots = MAX_IMAGES - product.images.length;
@@ -161,11 +166,14 @@ function handleImageUpload(event) {
     };
     reader.readAsDataURL(file);
   }
-
-  event.target.value = '';
+  await imageStore.upLoadImage(event.target.files);
+  fileText.push(imageStore.image)
+  // event.target.value = '';
 }
 
 const handleClick = () => {
+  product.images = []
+  product.images = fileText
   productStore.addProduct(product);
 };
 

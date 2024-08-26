@@ -131,11 +131,11 @@ const items = reactive([
         label: 'Quản lý đơn hàng',
         title: 'Quản lý đơn hàng'
       },
-      {
-        key: '9',
-        label: 'Thêm mới đơn hàng',
-        title: 'Thêm mới đơn hàng'
-      }
+      // {
+      //   key: '9',
+      //   label: 'Thêm mới đơn hàng',
+      //   title: 'Thêm mới đơn hàng'
+      // }
     ]
   },
   {

@@ -23,8 +23,6 @@
         <option value="1"  >Mở bán</option>
         <option value="0"  >Dừng bán</option>
       </select>
-
-
       <p class="pt-6 pb-3 text-[16px] font-normal">Nhãn hiệu sản phẩm:</p>
         <a-tag
           color="blue"
@@ -32,8 +30,6 @@
         >
           {{ productStore.product.brand_name }}
         </a-tag>
-
-
     <p class="pt-6 pb-3 text-[16px] font-normal">Danh mục sản phẩm:</p>
     <div class="flex flex-wrap">
       <a-tag
@@ -46,8 +42,6 @@
       </a-tag>
 
     </div>
-
-
       <label class=" block mt-5 mb-3 text-[16px]" for="input-price" >Số lượt bán:</label>
       <input class="input input--one w-full" readonly :value="productStore.product.total_sold ? productStore.product.total_sold : 0 " type="number" id="input-price"  min="0" />
 <label class="block mt-5 mb-3 text-[16px]" for="sale-price">Rate star:</label>

@@ -250,15 +250,29 @@ export default {
   updateProductItem(formData){
     return httpAuth.put(`${config.baseApiUrl}/api/v1/sku`,formData);
   },
-  //FILE
-  // upLoadImage(formData){
-  //   return httpAuth.put(`${config.baseApiUrl}/api/products/uploads`, formData, {
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data'
-  //     }
-  //   });
-  // },
-  // upLoadImageText(imageText){
-  //     return httpAuth.post(`${config.baseApiUrl}/api/v1/sku`, imageText);
-  // }
+  getListProductItemByProductId(id){
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/product/${id}`);
+  },
+  //Inventory
+  getAllInventory(page, size, searchQuery, skuCode) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/inventory?page=${page - 1}&size=${size}&name=${searchQuery}&skuCode=${skuCode}`);
+  },
+  addInventory(formData){
+    return httpAuth.post(`${config.baseApiUrl}/api/v1/inventory/import`, formData);
+  },
+  //Orders
+  getAllOrder(page, size, searchQuery, skuCode){
+    return httpAuth.get(`${config.baseApiUrl}/api/orders?page=${page - 1}&size=${size}&name=${searchQuery}&skuCode=${skuCode}`);
+  },
+  getAllOrderUser(){
+    return httpAuth.get(`${config.baseApiUrl}/api/orders/user`);
+  },
+  //Image
+  upLoadImage(img){
+    return httpAuth.post(`${config.baseApiUrl}/api/products/uploads`, img, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  }
 };

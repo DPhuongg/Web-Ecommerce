@@ -58,10 +58,10 @@ export const useProductStore = defineStore('products', {
         formData.append('images', image); // Lấy tên tệp từ đối tượng File
       });
 
-      this.productForm.images_text.forEach((images_text) => {
-        formData.append('imagesText', images_text); 
-        console.log("mmmmmmmmmmmmmmaaaaaaa",formData.images) // Lấy tên tệp từ đối tượng File
-      });
+      // this.productForm.images_text.forEach((images_text) => {
+      //   formData.append('imagesText', images_text); 
+      //   console.log("mmmmmmmmmmmmmmaaaaaaa",formData.images) // Lấy tên tệp từ đối tượng File
+      // });
 
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
@@ -81,9 +81,11 @@ export const useProductStore = defineStore('products', {
       });
 
       this.productForm = { ...product };
-      console.log(this.productForm);
       const formData = this.createFormData();
+      console.log(this.productForm,);
+      console.log("day la formdata",formData )
       const response = await apiServices.createProduct(formData);
+      console.log("quay tròn quay tròn")
       Swal.close();
 
       if (response.data.code === 200) {

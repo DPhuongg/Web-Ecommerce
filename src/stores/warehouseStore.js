@@ -28,6 +28,7 @@ export const useWarehouseStore = defineStore('warehouse', {
     },
 
     async fetchWarehouses(page = 1, searchQuery = '') {
+      console.log("vô đây warehouse")
       const response = await apiServices.getAllWarehouse(page, this.pageSize, searchQuery);
       // const reversedData = _.reverse(_.clone(response.data.data.content));
       const reversedData = response.data.data.content;

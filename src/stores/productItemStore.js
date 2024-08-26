@@ -51,12 +51,10 @@ export const useProductItemStore = defineStore('productItems', {
     },
 
     async addProductItem(productItem) {
-      console.log("addProductItem",productItem)
       this.productItemForm = {...productItem };
       const response = await apiServices.createProductItem(this.productItemForm);
-      console.log("productItemFormproductItemFormproductItemForm", this.productItemForm)
+      router.push({ name: 'product-item' });
       if (response.data.code === 200) {
-        router.push({ name: 'menu-4' , query: { page: 1 } });
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -77,8 +75,8 @@ export const useProductItemStore = defineStore('productItems', {
       console.log("productItemForm",this.productItemForm)
       const formData = this.createFormData();
       const response = await apiServices.updateProductItem(this.productItemForm);
+      router.push({ name: 'product-item' });
       if (response.data.code === 200) {
-        router.push({ name: 'menu-4' , query: { page: 1 } });
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -87,6 +85,7 @@ export const useProductItemStore = defineStore('productItems', {
           timer: 1500
         });
       }
+      
     },
 
     async deleteProductItem(id, productId) {
@@ -112,5 +111,10 @@ export const useProductItemStore = defineStore('productItems', {
       }
     },
 
+    async getListProductItemByProductId(id){
+      const response = await apiServices.getListProductItemByProductId(id);
+      console.log("prodcgetListProductItemByProductId", response.data.data);
+      this.productItems = response.data.data;
+    }
   }
 });

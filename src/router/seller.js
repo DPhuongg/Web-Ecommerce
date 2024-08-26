@@ -106,12 +106,20 @@ const seller = [
         props: (route) => ({ page: route.query.id})
       }
       ,
-
-      
       {
         path: 'list-voucher',
         name: 'menu-6',
         component: () => import('../components/voucher/voucherSeller/ListVoucher.vue')
+      },
+      {
+        path: 'list-inventory',
+        name: 'menu-12',
+        component: () => import('../components/inventory/listInventory/ListInventory.vue')
+      },
+      {
+        path: 'list-order',
+        name: 'menu-8',
+        component: () => import('../components/order/listOrder/ListOrder.vue')
       },
     ]
   }
