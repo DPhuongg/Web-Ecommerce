@@ -54,7 +54,7 @@
                       v-for="discount in voucherData"
                       :key="discount.id"
                       :class="{
-                        'border border-[#F45449]': selectedDiscountIds[record.id] === discount.id,
+                        'border-2 border-[#F45449]': selectedDiscountIds[record.id] === discount.id,
                         'border border-[#EEEEEE]': selectedDiscountIds[record.id] !== discount.id
                       }"
                       class="mb-3 p-3 rounded-md text-[15px]"
@@ -208,7 +208,7 @@ const handleTableChange = (pagination) => {
 
 const selectedCartItems = ref([]);
 
-const handleCheckboxChange = (id, checked) => {
+const handleCheckboxChange = async (id, checked) => {
   const item = cartData.value.dataSource.find((item) => item.id === id);
 
   if (item) {
@@ -220,25 +220,27 @@ const handleCheckboxChange = (id, checked) => {
     } else {
       selectedCartItems.value = selectedCartItems.value.filter((itemId) => itemId !== id);
       cartStore.totalPrice -= item.totalPrice;
+      await apiServices.addVoucher(id, null);
     }
     if (cartStore.totalPrice < 0) {
       cartStore.totalPrice = 0;
     }
   }
-  console.log();
 };
 
 const deleteCart = (id) => {
   cartStore.deleteCart(id);
 };
 
+
 const updateQuantity = debounce((productId, quantity) => {
+  console.log('có đi vào đây');
   if (productId && quantity > 0) {
     cartStore.updateCartItem(productId, quantity);
   }
-}, 300);
+}, 0);
 
-const decreaseQuantity = (record) => {
+const decreaseQuantity = async (record) => {
   const item = cartStore.cartItems.find((i) => i.id === record.id);
   if (item && item.quantity > 1) {
     const previousTotalPrice = item.quantity * item.productDetails.price;
@@ -250,10 +252,12 @@ const decreaseQuantity = (record) => {
     }
   }
 
-  updateQuantity(item.id, item.quantity);
+  await updateQuantity(item.id, item.quantity);
+  const res = await apiServices.getCartPrice(record.id);
+  record.totalPrice = res.data.data;
 };
 
-const increaseQuantity = (record) => {
+const increaseQuantity = async (record) => {
   const item = cartStore.cartItems.find((i) => i.id === record.id);
   if (item) {
     const previousTotalPrice = item.quantity * item.productDetails.price;
@@ -265,7 +269,9 @@ const increaseQuantity = (record) => {
     }
   }
 
-  updateQuantity(item.id, item.quantity);
+  await updateQuantity(item.id, item.quantity);
+  const res = await apiServices.getCartPrice(record.id);
+  record.totalPrice = res.data.data;
 };
 
 const timeoutId = ref(null);
@@ -306,7 +312,7 @@ async function applyDiscount(record, discountId) {
   const res = await apiServices.getCartPrice(record.id);
   // console.log(res);
   record.totalPrice = res.data.data;
-  console.log(record.totalPrice);
+  // console.log(record.totalPrice);
 }
 
 const handlePayment = async () => {

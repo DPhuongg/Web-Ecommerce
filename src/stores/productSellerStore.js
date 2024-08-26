@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 export const useProductStore = defineStore('products', {
   state: () => ({
-    product:[],
+    product: [],
     products: [],
     totalElements: 0,
     currentPage: 1,
@@ -18,7 +18,7 @@ export const useProductStore = defineStore('products', {
       brandId: '',
       categoryIds: [],
       images: [],
-      images_text:[]
+      images_text: []
     }
   }),
 
@@ -29,7 +29,17 @@ export const useProductStore = defineStore('products', {
     },
 
     async fetchProducts(page = 1, searchQuery = '') {
-      const response = await apiServices.getListProduct(page, this.pageSize, searchQuery);
+      Swal.fire({
+        title: 'Loading...',
+        text: 'Vui lòng chờ...',
+        icon: 'info',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      const response = await apiServices.getListProductS(page, this.pageSize, searchQuery);
+      Swal.close();
       const content = response.data.data.productResponses;
 
       this.products = _.map(content, (product, index) => ({
@@ -59,8 +69,8 @@ export const useProductStore = defineStore('products', {
       });
 
       this.productForm.images_text.forEach((images_text) => {
-        formData.append('imagesText', images_text); 
-        console.log("mmmmmmmmmmmmmmaaaaaaa",formData.images) // Lấy tên tệp từ đối tượng File
+        formData.append('imagesText', images_text);
+        console.log('mmmmmmmmmmmmmmaaaaaaa', formData.images); // Lấy tên tệp từ đối tượng File
       });
 
       for (let [key, value] of formData.entries()) {
@@ -74,7 +84,7 @@ export const useProductStore = defineStore('products', {
         title: 'Đang thêm sản phẩm...',
         text: 'Vui lòng chờ...',
         icon: 'info',
-        allowOutsideClick: false, 
+        allowOutsideClick: false,
         didOpen: () => {
           Swal.showLoading();
         }
@@ -87,7 +97,7 @@ export const useProductStore = defineStore('products', {
       Swal.close();
 
       if (response.data.code === 200) {
-        router.push({ name: 'menu-4' , query: { page: 1 } });
+        router.push({ name: 'menu-4', query: { page: 1 } });
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -99,21 +109,21 @@ export const useProductStore = defineStore('products', {
     },
 
     async fetchProduct(id) {
-      console.log("load product by id", id)
+      console.log('load product by id', id);
       const response = await apiServices.getProduct(id);
       this.product = response.data.data;
-      console.log("call api product nhé", this.product)
+      console.log('call api product nhé', this.product);
     },
 
-    async updateProduct(product,id) {
+    async updateProduct(product, id) {
       this.productForm = { ...product };
-      console.log("this.productForm.name",this.productForm);
-      console.log("this.productForm.name product",product);
+      console.log('this.productForm.name', this.productForm);
+      console.log('this.productForm.name product', product);
       const formData = this.createFormData();
-      console.log("idddddđ", formData)
-      const response = await apiServices.updateProduct(formData,id);
+      console.log('idddddđ', formData);
+      const response = await apiServices.updateProduct(formData, id);
       if (response.data.code === 200) {
-        router.push({ name: 'menu-4' , query: { page: 1 } });
+        router.push({ name: 'menu-4', query: { page: 1 } });
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -145,7 +155,6 @@ export const useProductStore = defineStore('products', {
           icon: 'success'
         });
       }
-    },
-
+    }
   }
 });

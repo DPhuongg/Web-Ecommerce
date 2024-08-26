@@ -26,6 +26,7 @@ import CloseIcon from './close.svg';
 import AdminIcon from './admin.svg';
 import OrderIcon from './order.svg';
 import EyeIcon from './eye.svg';
+import DropIcon from './dropdown.svg';
 
 export {
   CartIcon,
@@ -55,5 +56,6 @@ export {
   CloseIcon,
   AdminIcon,
   OrderIcon,
-  EyeIcon
+  EyeIcon,
+  DropIcon
 };

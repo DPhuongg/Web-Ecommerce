@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import authService from '@/domain/authServices';
 import router from '@/router/index.js';
 import Swal from 'sweetalert2';
+import _ from 'lodash';
 
 export const useAuthStore = defineStore({
   id: 'auth',
@@ -33,23 +34,31 @@ export const useAuthStore = defineStore({
       }
     },
 
-    async registerUser({ fullName, email, password, role, country, province, district, commune, address_detail }) {
+    async register(newUser) {
       try {
-        if (Array.isArray(role) && role.includes('seller')) {
-          role = 'seller';
-        }
-        const response = await authService.register(fullName, email, password, role, {
-          country,
-          province,
-          district,
-          commune,
-          address_detail
+        Swal.fire({
+          title: 'Loading...',
+          text: 'Vui lòng chờ...',
+          icon: 'info',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
         });
-
-        this.token = response.data.token; // Lưu token vào store
-        localStorage.setItem('token', response.data.token); // Lưu token vào localStorage
-
-        router.push({ path: `/${role}/home` });
+        const newSignUp = _.omit(newUser, ['role', 'confirmPassword']);
+        console.log(newUser.role, newSignUp);
+        const response = await authService.register(newUser.role, newSignUp);
+        Swal.close();
+        if (response.data.code === 200) {
+          console.log(newUser.role);
+          router.push({
+            name: 'verification',
+            params: {
+              role: newUser.role,
+              email: newUser.email,
+            }
+          });
+        }
       } catch (error) {
         const status = error.response.status;
         if (status === 400) {

@@ -13,6 +13,15 @@ export default {
   getAllUser() {
     return httpAuth.get(config.baseApiUrl + '/user/all');
   },
+  getInfoUser() {
+    return httpAuth.get(config.baseApiUrl + '/api/v1/user/profile');
+  },
+  updateProfileUser(newUser) {
+    return httpAuth.post(config.baseApiUrl + '/api/v1/user/updateProfile', newUser);
+  },
+  changePw(newPw) {
+    return httpAuth.post(config.baseApiUrl + '/api/v1/changePassword/', newPw);
+  },
 
   //INFOR
   getUser(role) {
@@ -20,20 +29,11 @@ export default {
   },
 
   //PRODCUT USER
-  getAllProduct(keyword,sort,fromPrice, toPrice, brandId,categoryIds,selectStar) {
-    return httpAuth.get(config.baseApiUrl + `/api/products/user?sort=${sort}&keyword=${keyword}&fromPrice=${fromPrice}&toPrice=${toPrice}&brand-ids=${brandId}&category-ids=${categoryIds}&rate=${selectStar}`);
-  },
-  getProductById(id) {
-    return httpAuth.get(`${config.baseApiUrl}/api/products/${id}`);
-  },
-  getQuantityByAttribute(id, ans) {
-    return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/values/ok/${id}?values-ids=${ans}`);
-  },
-  addCart(id, quantity) {
-    return httpAuth.post(config.baseApiUrl + '/api/cart-items', { productItemId: id, quantity: quantity });
-  },
-  quantityCart() {
-    return httpAuth.get(config.baseApiUrl + '/api/cart-items/quantity');
+  getAllProduct(keyword, sort, fromPrice, toPrice, brandId, categoryIds, selectStar) {
+    return httpAuth.get(
+      config.baseApiUrl +
+        `/api/products/user?sort=${sort}&keyword=${keyword}&fromPrice=${fromPrice}&toPrice=${toPrice}&brand-ids=${brandId}&category-ids=${categoryIds}&rate=${selectStar}`
+    );
   },
   getProductById(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/products/${id}`);
@@ -82,7 +82,7 @@ export default {
   getShopById(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/shop/${id}`);
   },
-  getBasicInfo(){
+  getBasicInfo() {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/seller/basicInfor`);
   },
 
@@ -131,7 +131,6 @@ export default {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/inventory/import?page=${page - 1}&size=${size}&skuCode=${searchId}&name=${searchName}`);
   },
 
-
   //BRAND
   getAllBrand(page, size, searchQuery) {
     return httpAuth.get(config.baseApiUrl + `/api/brands?page=${page - 1}&size=${size}&name=${searchQuery}`);
@@ -149,31 +148,32 @@ export default {
     return httpAuth.get(`${config.baseApiUrl}/api/products/seller?page=${page - 1}&size=${size}&keyword=${search}`);
   },
 
-    //PRODUCT
-    createProduct(formData) {
-      return httpAuth.post(`${config.baseApiUrl}/api/products`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-    },
-    getListProduct(page, size, search) {
-      return httpAuth.get(`${config.baseApiUrl}/api/products/seller?page=${page - 1}&size=${size}&keyword=${search}`);
-    },
+  //PRODUCT
+  createProduct(formData) {
+    return httpAuth.post(`${config.baseApiUrl}/api/products`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  },
+  getListProductS(page, size, search) {
+    return httpAuth.get(`${config.baseApiUrl}/api/products/seller?page=${page - 1}&size=${size}&keyword=${search}`);
+  },
 
-    getProduct(id) {
-      return httpAuth.get(`${config.baseApiUrl}/api/products/${id}`);
-    },
-    updateProduct(formData,id) {
-      return httpAuth.put(`${config.baseApiUrl}/api/products/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-    },
-    deleteProduct(id) {
-      return httpAuth.delete(`${config.baseApiUrl}/api/products/${id}`);
-    },
+  getProduct(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/products/${id}`);
+  },
+  updateProduct(formData, id) {
+    return httpAuth.put(`${config.baseApiUrl}/api/products/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  },
+  deleteProduct(id) {
+    return httpAuth.delete(`${config.baseApiUrl}/api/products/${id}`);
+  },
+
   //CART
   getAllCart(page) {
     return httpAuth.get(`${config.baseApiUrl}/api/cart-items?page=${page - 1}`);
@@ -189,8 +189,8 @@ export default {
   },
 
   //VOUCHER
-  getAllVoucher() {
-    return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getAllVouchers`);
+  getAllVoucher(page, size, searchQuery) {
+    return httpAuth.get(`${config.baseApiUrl}/api/vouchers/search/name?name=${searchQuery}&page=${page-1}&size=${size}`);
   },
   getUserVoucher(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getVouchers/${id}`);
@@ -202,63 +202,65 @@ export default {
   getCartPrice(itemId) {
     return httpAuth.get(`${config.baseApiUrl}/api/checkout/total-price?selectedCartItems=${itemId}`);
   },
+  createVoucher(voucher) {
+    return httpAuth.post(`${config.baseApiUrl}/api/vouchers/createNewVoucher`, voucher);
+  },
+  getVoucherById(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/vouchers/getAllVouchers/${id}`);
+  },
+  updateVoucher(id, newVoucher) {
+    return httpAuth.post(`${config.baseApiUrl}/api/vouchers/getAllVouchers/updateVoucher/${id}`, newVoucher);
+  },
+  deleteVoucher(id) {
+    return httpAuth.delete(`${config.baseApiUrl}/api/vouchers/getAllVouchers/deleteVoucher/${id}`);
+  },
 
+  //PAYMENT
   payment(selectedCartItems) {
     return httpAuth.post(config.baseApiUrl + '/api/checkout/checkout_cart', {
       selectedCartItems: selectedCartItems,
       method: true,
       note: 'Ghi chú thanh toán'
     });
-  }
-  ,
+  },
+
   //ATTRIBUTE
-  createAttributeProduct(attribute,id) {
+  createAttributeProduct(attribute, id) {
     return httpAuth.post(`${config.baseApiUrl}/api/v1/product-attribute/${id}`, attribute);
   },
 
-  getListAttributeProduct(id){
-    return httpAuth.get(`${config.baseApiUrl}/api/v1/product-attribute/all-product-attribute/${id}`); 
+  getListAttributeProduct(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/v1/product-attribute/all-product-attribute/${id}`);
   },
 
-  deleteAttributeProduct(id){
+  deleteAttributeProduct(id) {
     return httpAuth.delete(`${config.baseApiUrl}/api/v1/product-attribute/${id}`);
   },
 
   //AttRIBUTE VALUES
-  createAttributeValues(attributeValue){
+  createAttributeValues(attributeValue) {
     return httpAuth.post(`${config.baseApiUrl}/api/attribute-values`, attributeValue);
   },
 
-  getListAttributeValues(id){
-    return httpAuth.get(`${config.baseApiUrl}/api/attribute-values/${id}`); 
+  getListAttributeValues(id) {
+    return httpAuth.get(`${config.baseApiUrl}/api/attribute-values/${id}`);
   },
 
-  //PRODUCT ITEM 
-  getListProductItem(id,page, size) {
+  //PRODUCT ITEM
+  getListProductItem(id, page, size) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/list-sku/${id}?page=${page - 1}&size=${size}`);
   },
   deleteProductItem(id) {
     return httpAuth.delete(`${config.baseApiUrl}/api/v1/sku/${id}`);
   },
 
-  createProductItem(formData){
+  createProductItem(formData) {
     return httpAuth.post(`${config.baseApiUrl}/api/v1/sku`, formData);
   },
-  getProductItem(id){
+  getProductItem(id) {
     return httpAuth.get(`${config.baseApiUrl}/api/v1/sku/${id}`);
   },
-  updateProductItem(formData){
-    return httpAuth.put(`${config.baseApiUrl}/api/v1/sku`,formData);
-  },
-  //FILE
-  // upLoadImage(formData){
-  //   return httpAuth.put(`${config.baseApiUrl}/api/products/uploads`, formData, {
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data'
-  //     }
-  //   });
-  // },
-  // upLoadImageText(imageText){
-  //     return httpAuth.post(`${config.baseApiUrl}/api/v1/sku`, imageText);
-  // }
+  updateProductItem(formData) {
+    return httpAuth.put(`${config.baseApiUrl}/api/v1/sku`, formData);
+  }
 };

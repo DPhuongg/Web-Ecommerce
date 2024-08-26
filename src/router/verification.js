@@ -1,6 +1,6 @@
 const verification = [
   {
-    path: '/verification/:email',
+    path: '/verification/:role/:email',
     name: 'verification',
     component: () => import('../pages/OTP/VerifyView.vue')
   }

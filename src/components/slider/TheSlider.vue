@@ -22,7 +22,7 @@ import { ForwardIcon, PreviousIcon } from '@/assets/icons/icon.js';
 const state = reactive({
   currentIndex: 0,
   slides: [
-    { src: new URL('@/assets/images/bg_slider_8.jpg', import.meta.url).href, alt: 'Image 1' },
+    { src: new URL('@/assets/images/slide3.png', import.meta.url).href, alt: 'Image 1' },
     { src: new URL('@/assets/images/bg_slider_11.jpg', import.meta.url).href, alt: 'Image 2' },
     { src: new URL('@/assets/images/bg_slider_13.jpg', import.meta.url).href, alt: 'Image 3' }
   ]

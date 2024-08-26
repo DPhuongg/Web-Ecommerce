@@ -83,8 +83,5 @@ const handleOk = () => {
     }
   }
 }
-// ::v-deep .ant-modal-body{
-//   width: 250px!important;
-//   padding: 20px
-// }
+
 </style>

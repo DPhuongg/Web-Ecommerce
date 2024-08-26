@@ -1,5 +1,5 @@
 <template>
-  <div class="warehouse bg-[#EFEFEF] p-9">
+  <div class="voucher bg-[#EFEFEF] p-9 rounded-lg">
     <h1 class="text-[25px] font-bold mb-6">Danh sách mã giảm giá</h1>
 
     <div class="mb-8 flex justify-between">
@@ -61,6 +61,14 @@
             />
           </template>
 
+          <span v-else-if="column.key === 'name' || column.key === 'coupon_code'">
+            <a-tooltip :title="record[column.dataIndex]">
+              <span>
+                {{ record[column.dataIndex].length > 20 ? record[column.dataIndex].substring(0, 10) + '...' : record[column.dataIndex] }}
+              </span>
+            </a-tooltip>
+          </span>
+
           <span v-else>
             {{ record[column.dataIndex] }}
           </span>
@@ -71,12 +79,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { format, parseISO } from 'date-fns';
 import { useVoucherStore } from '@/stores/voucherSellerStore';
 import { SearchIcon, AddIcon, EditIcon, TrashIcon, EyeIcon } from '@/assets/icons/icon.js';
+import router from '@/router/index.js';
 
 const voucherStore = useVoucherStore();
+const searchQuery = ref('');
 
 const voucherData = computed(() => ({
   dataSource: voucherStore.vouchers,
@@ -138,11 +148,39 @@ const columns = [
   }
 ];
 
+const handleTableChange = (pagination) => {
+  voucherStore.updatePagination({
+    currentPage: pagination.current
+  });
+};
+
 const handleAddNew = () => {
-  router.push()
+  router.push({ name: 'menu-7' });
+};
+
+const detailVoucher = (id) => {
+  voucherStore.detailVoucher(id);
+};
+
+const editVoucher = (id) => {
+  voucherStore.editVoucher(id);
+};
+
+const deleteVoucher = (id) => {
+  voucherStore.deleteVoucher(id);
+};
+
+const handleAction = () => {
+  voucherStore.fetchVouchers(1, searchQuery.value);
 }
 
 onMounted(async () => {
-  voucherStore.fetchVouchers();
+  voucherStore.fetchVouchers(1, );
 });
 </script>
+
+<style scoped lang="scss">
+.voucher {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+</style>
