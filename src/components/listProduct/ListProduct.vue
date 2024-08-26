@@ -4,7 +4,7 @@
       <div
         v-for="product in productData.dataSource"
         :key="product.id"
-        class="product__item rounded-md overflow-hidden"
+        class="product__item rounded-md overflow-hidden cursor-pointer"
         @click="goToProductDetail(product.id)"
       >
         <div class="relative w-full overflow-hidden aspect-square">

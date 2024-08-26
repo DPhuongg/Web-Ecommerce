@@ -28,9 +28,18 @@ export const useWarehouseStore = defineStore('warehouse', {
     },
 
     async fetchWarehouses(page = 1, searchQuery = '') {
-      console.log("vô đây warehouse")
+      Swal.fire({
+        title: 'Loading...',
+        text: 'Vui lòng chờ...',
+        icon: 'info',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
       const response = await apiServices.getAllWarehouse(page, this.pageSize, searchQuery);
       // const reversedData = _.reverse(_.clone(response.data.data.content));
+      Swal.close();
       const reversedData = response.data.data.content;
 
       this.warehouses = _.map(reversedData, (item, index) => ({

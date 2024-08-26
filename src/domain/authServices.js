@@ -2,15 +2,10 @@ import config from '@/configs/appBase';
 import http from '@/infrastructures/apiHttp';
 
 export default {
-  register(fullName, email, password, role, addressData) {
-    return http.post(`${config.baseApiUrl}/api/v1/${role}/signup`, { fullName: fullName, email: email, password: password, ...addressData });
-    // return http.post(`${config.baseApiUrl}/api/v1/${role}/signUpNewVersion`, { fullName: fullName, email: email, password: password });
-    // return http.post(config.baseApiUrl + '/register', data);
+  register(role, newUser) {
+    return http.post(`${config.baseApiUrl}/api/v1/${role}/signUpNewVersion`, newUser);
   },
   login(email, password, role) {
-    console.log(role);
-    // return http.post(config.baseApiUrl + '/login', { email: email, password: password });
-    // http://localhost:8080/api/v1/user/login
     return http.post(`${config.baseApiUrl}/api/v1/${role}/login`, { email: email, password: password });
   },
   logout() {
@@ -29,17 +24,21 @@ export default {
     return data;
   },
   forgot(email) {
-    // http://localhost:3000/api/v1/forgotPassword/changePassword/{email}
     return http.post(`${config.baseApiUrl}/api/v1/forgotPassword/changePassword/${email}`, { email: email });
   },
 
   sendOTP(newUser) {
-    // console.log(newUser)
     return http.post(`${config.baseApiUrl}/api/v1/${newUser.role}/signUpNewVersion`, newUser);
   },
 
-  checkOTP(email, otp) {
-    return http.post(config.baseApiUrl + '/api/v1/user/verifyOtp', { email: email, otp: otp });
+  checkOTP(role, email, otp) {
+    const otpNumber = Number(otp);
+
+    console.log(role);
+    return http.post(`${config.baseApiUrl}/api/v1/${role}/verifyOtp`, {
+      email: email,
+      otp: otpNumber
+    });
   },
 
   resendOTP(email) {

@@ -66,8 +66,6 @@ import {
   GiftOutlined,
   FileDoneOutlined,
   FileTextOutlined,
-  DesktopOutlined,
-  InboxOutlined,
   BarChartOutlined
 } from '@ant-design/icons-vue';
 

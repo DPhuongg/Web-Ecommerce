@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="header__inner">
+    <!-- <div class="header__inner">
       <UserIcon class="icon__user mt-[10px] mb-[10px]"></UserIcon>
       <div v-if="!authStore.isLoggedIn" class="mt-[10px] mb-[10px]">
         <button class="button mr-2" @click="goToLogin">Đăng nhập</button>
@@ -9,23 +9,26 @@
       </div>
       <div v-if="authStore.isLoggedIn" class="flex">
         <button class="button" @click="logout">Đăng xuất</button>
-        <!-- <Modal></Modal> -->
       </div>
+    </div> -->
+
+    <div class="header__inner">
+      <DropDown></DropDown>
     </div>
 
     <div class="header__search">
       <div class="container flex items-center">
-        <img src="@/assets/images/logo.png" class="header__images" />
+        <img src="@/assets/images/logo.png" class="header__images cursor-pointer" @click="homeClick" />
 
-        <input 
-          type="text" 
-          placeholder="Nhập từ khóa tìm kiếm..." 
+        <input
+          type="text"
+          placeholder="Nhập từ khóa tìm kiếm..."
           class="header__input"
           @focus="handleFocus"
           v-model="inputValue"
           @blur="hideList()"
           @keyup.enter="search"
-          />
+        />
 
         <button class="button__search mr-3" @click="search">
           <SearchIcon class="icon__search"></SearchIcon>
@@ -36,7 +39,7 @@
             <CartIcon class="icon__cart" />
             <span
               class="cart__count absolute top-[-12px] right-[1px] text-[#fff] bg-[#F11A27] rounded-full min-w-[25px] min-h-[25px] flex items-center justify-center text-[12px]"
-              >{{cartCount}}</span
+              >{{ cartCount }}</span
             >
           </div>
           <span class="header__title">Giỏ hàng</span>
@@ -58,11 +61,9 @@ import router from '@/router/index.js';
 import { productStore } from '@/stores/products';
 import { computed, onMounted } from 'vue';
 // import Modal from '@/components/modal/ModalView.vue';
-import Modal from '@/components/modal/ModalView.vue';
+import DropDown from '@/components/dropDown/DropDownUser.vue';
 import { ref } from 'vue';
-import { eventBus } from '@/utils/eventBusHeader.js'; 
-
-
+import { eventBus } from '@/utils/eventBusHeader.js';
 
 const inputValue = ref('');
 const authStore = useAuthStore();
@@ -73,7 +74,7 @@ const cartCount = computed(() => store.itemCount);
 
 const search = () => {
   eventBus.searchQuery = inputValue.value;
-  console.log("test console log header",eventBus.searchQuery )
+  console.log('test console log header', eventBus.searchQuery);
 };
 
 const goToLogin = () => {
@@ -91,6 +92,10 @@ const logout = () => {
 
 const handleCartClick = () => {
   router.push({ name: 'list-cart' });
+};
+
+const homeClick = () => {
+  router.push({ name: 'Home user' });
 };
 
 const handleFollowOrdersClick = () => {

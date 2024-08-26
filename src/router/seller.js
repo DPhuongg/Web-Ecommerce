@@ -9,18 +9,6 @@ const seller = [
         component: () => import('../components/dashBoard/DashBoard.vue')
       },
 
-      // {
-      //   path: 'category',
-      //   name: 'menu-2',
-      //   component: () => import('../components/category/ListCategory/ListCategory.vue')
-      // },
-
-      // {
-      //   path: 'brand',
-      //   name: 'menu-3',
-      //   component: () => import('../components/brand/ListBrand/ListBrand.vue')
-      // },
-
       {
         path: 'list-warehouse',
         name: 'menu-10',
@@ -50,7 +38,7 @@ const seller = [
         path: 'product-detail/:id',
         name: 'product-detail',
         component: () => import('../components/productSeller/productDetail/ProductDetail.vue'),
-        props: (route) => ({ page: route.query.id})
+        props: (route) => ({ page: route.query.id })
       },
 
       {
@@ -97,19 +85,39 @@ const seller = [
         path: 'product-item/:id',
         name: 'product-item',
         component: () => import('../pages/productItem/productItem.vue'),
-        props: (route) => ({ page: route.query.id})
+        props: (route) => ({ page: route.query.id })
       },
       {
         path: 'product-edit/:id',
         name: 'product-edit',
         component: () => import('../components/productSeller/editProduct/editProduct.vue'),
-        props: (route) => ({ page: route.query.id})
-      }
-      ,
+        props: (route) => ({ page: route.query.id })
+      },
+
       {
         path: 'list-voucher',
         name: 'menu-6',
         component: () => import('../components/voucher/voucherSeller/ListVoucher.vue')
+      },
+
+      {
+        path: 'create-voucher',
+        name: 'menu-7',
+        component: () => import('../components/voucher/voucherSeller/addVoucher/AddVoucher.vue')
+      },
+
+      {
+        path: 'voucher-detail/:id',
+        name: 'voucher-detail',
+        component: () => import('../components/voucher/voucherSeller/detailVoucher/DetailVoucher.vue'),
+        props: (route) => ({ id: route.params.id })
+      },
+
+      {
+        path: 'voucher-update/:id',
+        name: 'voucher-update',
+        component: () => import('../components/voucher/voucherSeller/updateVoucher/UpdateVoucher.vue'),
+        props: (route) => ({ id: route.params.id })
       },
       {
         path: 'list-inventory',

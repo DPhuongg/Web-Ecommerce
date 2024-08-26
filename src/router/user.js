@@ -18,6 +18,12 @@ const home = [
         name: 'product-detail-user',
         component: () => import('../components/listProduct/productDetail/ProductDetail.vue')
       },
+
+      {
+        path: 'view-profile-user',
+        name: 'view-profile-user',
+        component: () => import('../components/profileUser/ProfileUser.vue')
+      },
       {
         path: 'list-order',
         name: 'list-order',

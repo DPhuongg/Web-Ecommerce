@@ -23,10 +23,13 @@ import router from '@/router/index.js';
 
 const route = useRoute();
 const email = route.params.email;
-const verificationCode = ref('');
+const role = route.params.role;
+const verificationCode = ref();
 
 const confirmCode = async () => {
-  const response = await authService.checkOTP(email, verificationCode.value);
+  console.log(email, role, verificationCode.value);
+  const response = await authService.checkOTP(role, email, verificationCode.value);
+  console.log(response);
   if (response.data.code === 200) {
     Swal.fire({
       position: 'top-end',
@@ -35,7 +38,7 @@ const confirmCode = async () => {
       showConfirmButton: false,
       timer: 1500
     });
-    router.push({ name: 'HomeUser' });
+    router.push({ path: `/login/${role}` });
   } else if (response.data.code == 500) {
     Swal.fire({
       icon: 'error',
