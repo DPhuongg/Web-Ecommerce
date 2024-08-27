@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import apiServices from '@/domain/apiServices';
 
-
 export const productStore = defineStore('products', {
   state: () => ({
     products: [],
@@ -12,10 +11,16 @@ export const productStore = defineStore('products', {
   }),
 
   actions: {
-    async fetchProducts(keyword='',sort='',fromPrice='', toPrice='',brandId='', selectedCategories='', selectStar='') {
+    updatePagination({ currentPage }) {
+      this.currentPage = currentPage;
+      this.fetchProducts('', '', '', '', '', '', '', this.currentPage);
+    },
+    async fetchProducts(keyword = '', sort = '', fromPrice = '', toPrice = '', brandId = '', selectedCategories = '', selectStar = '', page = 1) {
       try {
-        const response = await apiServices.getAllProduct(keyword,sort, fromPrice,toPrice,brandId,selectedCategories, selectStar);
+        const response = await apiServices.getAllProduct(keyword, sort, fromPrice, toPrice, brandId, selectedCategories, selectStar, page);
         this.products = response.data.data.productResponses;
+        this.totalElements = response.data.data.totalPages * 10;
+        console.log
         console.log(this.products);
       } catch (err) {
         this.error = 'Faliled';
@@ -27,6 +32,6 @@ export const productStore = defineStore('products', {
     async fetchCart() {
       const response = await apiServices.quantityCart();
       this.itemCount = response.data.data;
-      }
+    }
   }
 });

@@ -9,7 +9,9 @@ export const useProductDetailStore = defineStore('product', {
     price: 0,
     quantity: 0,
     total_quantity: 0,
-    itemId: null
+    itemId: null,
+    aveStart: 0,
+    comments: []
   }),
 
   actions: {
@@ -35,6 +37,20 @@ export const useProductDetailStore = defineStore('product', {
         console.log(this.price);
         this.quantity = item.quantity;
         this.itemId = item.id;
+      }
+    },
+
+    async fetchAveStart(id) {
+      const response = await apiServices.getAveStart(id);
+      if(response.data.code === 200){
+        this.aveStart = response.data.data;
+      }
+    },
+
+    async fetchComments(id) {
+      const response = await apiServices.getAllComments(id);
+      if(response.data.code === 200){
+        this.comments = response.data.data;
       }
     },
 

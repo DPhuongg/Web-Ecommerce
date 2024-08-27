@@ -26,13 +26,13 @@
               <span class="text-[14px] mr-1 text-[#FEC700]">{{ product.average_rate }}</span>
               <StartIcon class="w-[14px] h-[14px]"></StartIcon>
             </div>
-            <p class="italic font-normal text-[13px]">Đã bán {{ formatNumber(product.total_sold)}}</p>
+            <p class="italic font-normal text-[13px]">Đã bán {{ formatNumber(product.total_sold) }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <a-pagination v-model:current="current" simple :total="50" class="mb-[30px] mt-[20px]" />
+    <a-pagination v-model:current="currentPage" simple :total="productData.totalElements" class="mb-[30px] mt-[20px]" @change="handlePageChange" />
   </div>
 </template>
 
@@ -41,7 +41,7 @@ import { computed, onMounted, watch, ref } from 'vue';
 import { productStore } from '@/stores/products';
 import router from '@/router/index.js';
 import { StartIcon } from '@/assets/icons/icon.js';
-import { eventBus } from '@/utils/eventBusHeader.js'; 
+import { eventBus } from '@/utils/eventBusHeader.js';
 
 const searchQuery = ref(eventBus.searchQuery);
 
@@ -52,7 +52,12 @@ const props = defineProps({
     default: () => ({})
   }
 });
+const currentPage = ref(1); 
 
+function handlePageChange() {
+  console.log(currentPage.value);
+  store.updatePagination(currentPage.value);
+}
 const productData = computed(() => ({
   dataSource: store.products,
   totalElements: store.totalElements,
@@ -73,20 +78,30 @@ const formatCurrency = (value) => {
 
 // watch(() => props.filter, fetchProducts, { immediate: true });
 
-watch(() => eventBus.searchQuery, (newQuery) => {
-    console.log("fetch for search")
-  searchQuery.value = newQuery;
-  store.fetchProducts(searchQuery.value,props.option);
-  productData.dataSource = store.products
-});
-
+watch(
+  () => eventBus.searchQuery,
+  (newQuery) => {
+    console.log('fetch for search');
+    searchQuery.value = newQuery;
+    store.fetchProducts(searchQuery.value, props.option);
+    productData.value.dataSource = store.products;
+  }
+);
 
 watch(
   () => props.filter,
   (newFilter, oldFilter) => {
     console.log('Filter changed:', newFilter);
-    store.fetchProducts(searchQuery.value,newFilter.sort,newFilter.fromPrice,newFilter.toPrice,newFilter.selectedBrand.join(','), newFilter.selectedCategories.join(','),newFilter.selectStar);
-    productData.dataSource = store.products
+    store.fetchProducts(
+      searchQuery.value,
+      newFilter.sort,
+      newFilter.fromPrice,
+      newFilter.toPrice,
+      newFilter.selectedBrand.join(','),
+      newFilter.selectedCategories.join(','),
+      newFilter.selectStar
+    );
+    productData.value.dataSource = store.products;
   },
   { deep: true }
 );
@@ -100,20 +115,30 @@ watch(
 
 // watch(() => props.filter, fetchProducts, { immediate: true });
 
-watch(() => eventBus.searchQuery, (newQuery) => {
-    console.log("fetch for search")
-  searchQuery.value = newQuery;
-  store.fetchProducts(searchQuery.value,props.option);
-  productData.dataSource = store.products
-});
-
+watch(
+  () => eventBus.searchQuery,
+  (newQuery) => {
+    console.log('fetch for search');
+    searchQuery.value = newQuery;
+    store.fetchProducts(searchQuery.value, props.option);
+    productData.value.dataSource = store.products;
+  }
+);
 
 watch(
   () => props.filter,
   (newFilter, oldFilter) => {
     console.log('Filter changed:', newFilter);
-    store.fetchProducts(searchQuery.value,newFilter.sort,newFilter.fromPrice,newFilter.toPrice,newFilter.selectedBrand.join(','), newFilter.selectedCategories.join(','),newFilter.selectStar);
-    productData.dataSource = store.products
+    store.fetchProducts(
+      searchQuery.value,
+      newFilter.sort,
+      newFilter.fromPrice,
+      newFilter.toPrice,
+      newFilter.selectedBrand.join(','),
+      newFilter.selectedCategories.join(','),
+      newFilter.selectStar
+    );
+    productData.value.dataSource = store.products;
   },
   { deep: true }
 );
@@ -132,6 +157,7 @@ function formatNumber(number) {
   }
 }
 onMounted(async () => {
+  console.log('có chạy vào đây');
   await store.fetchProducts();
 });
 </script>
