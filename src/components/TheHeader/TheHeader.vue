@@ -45,7 +45,7 @@
           <span class="header__title">Giỏ hàng</span>
         </button>
 
-        <button class="button__store">
+        <button @click="handleFollowOrdersClick" class="button__store">
           <StoreIcon class="icon__store"></StoreIcon>
           <span class="header__title">Theo dõi đơn hàng</span>
         </button>
@@ -96,6 +96,10 @@ const handleCartClick = () => {
 
 const homeClick = () => {
   router.push({ name: 'Home user' });
+};
+
+const handleFollowOrdersClick = () => {
+  router.push({ name: 'list-order' });
 };
 
 onMounted(async () => {

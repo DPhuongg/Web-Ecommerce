@@ -23,6 +23,11 @@ const home = [
         path: 'view-profile-user',
         name: 'view-profile-user',
         component: () => import('../components/profileUser/ProfileUser.vue')
+      },
+      {
+        path: 'list-order',
+        name: 'list-order',
+        component: () => import('../components/order/listOrderUser/ListOrderUer.vue')
       }
     ]
   }

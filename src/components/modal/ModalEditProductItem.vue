@@ -44,7 +44,10 @@ const props = defineProps({
   idProductItem: {
   type: Number,
   required: true
-}
+},
+  attributeProp:{
+    type:Object,
+  }
 });
 
 const productItemStore = useProductItemStore();
@@ -58,10 +61,10 @@ const productId = ref()
 const propsCopy  = ref()
 // const tempValues = ref
 const formData = reactive({
-    price: 0,
+    price: null,
     sku_code: '',
     product_id: productId, // Trực tiếp sử dụng `props.idProduct`
-    import_price: 0,
+    import_price: null,
     list_product_item: [],
 });
 
@@ -81,9 +84,6 @@ const fetchAttribute = async () => {
           }
         }
   }
-  console.log("húhúhú ", formData,productItemStore.productItem.list_product_item,  attributeProductStore.attributes)
-//   await store.fetchProducts('', props.option);
-//   productData.value.dataSource = store.products;
 };
 
 const handleLoadAttributeValue = async (index) => {
@@ -97,12 +97,11 @@ const fetchAttributeValue = async (id,index) => {
     label: value.value
   }));
     attributeValues.value[index] = temp.value
-    console.log("attributeValues.value", attributeValues.value[index])
 }
  
 // Sử dụng `watch` để theo dõi sự thay đổi của `props.idProduct`
 watch(() => props.idProduct, fetchAttribute, { immediate: true });
-
+watch(() => props.attributeProp, fetchAttribute, { immediate: true });
 const visible = ref(false);
 
 const showModal = () => {
@@ -116,15 +115,12 @@ const handleOk = async (e) => {
       formData.list_product_item.push({"attribute_value_id":tempAttributeValues.value[index]})
       }
       formData.product_id = route.params.id
-            console.log("chó phương",tempAttributeValues.value );
       await productItemStore.updateProductItem(formData)
+      window.location.reload();
       visible.value = false;
 };
 
 onMounted(async () => {
   await attributeProductStore.fetchAttributeProduct(route.params.id);
-  console.log("props.idProductItem", productItemStore.productItem)
-  // formData.sku_code = 
-  console.log("culi chạy việc vặt", props.idProductItem );
 });
 </script>

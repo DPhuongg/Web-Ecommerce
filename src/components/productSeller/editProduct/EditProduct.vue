@@ -58,7 +58,7 @@
         <div>
             <p class="pt-6 pb-3 text-[16px] font-normal">Danh mục sản phẩm</p>
             <a-select
-            v-model:value="defaultCategory"
+            v-model:value="product.categoryIds"
             mode="multiple"
             show-search
             placeholder="Chọn danh mục"
@@ -88,9 +88,9 @@ import Swal from 'sweetalert2';
 import { useRoute } from 'vue-router';
 import { ref, onMounted, reactive } from 'vue';
 import { useProductStore } from '@/stores/productSellerStore';
-
+import {useImageStore} from '@/stores/imageStore';
 const productStore = useProductStore();
-
+const imageStore = useImageStore();
 const brands = ref([]);
 const brand = ref(productStore.product.brand_name);
 const category = ref([]);
@@ -98,16 +98,17 @@ const defaultCategory = ref()
 const categories = ref([]);
 const route = useRoute();
 const id = ref(route.params.id);
-const imgUrl = []
-const imgFile = []
-const newImgFIle = []
+// const imgUrl = []
+// const imgFile = []
+var newImgFIle = []
+var fileText
 
 const product = reactive({
   name: productStore.product.name,
   description: productStore.product.description,
   status: productStore.product.status,
   brandId: productStore.product.brand_id,
-  categoryIds:defaultCategory.value,
+  categoryIds:null,
   images: productStore.product.images,
   images_text:[]
 });
@@ -143,12 +144,16 @@ const MAX_IMAGES = 8;
 
 function removeImage(index) {
   product.images.splice(index, 1);
+  fileText.splice(index,1)
+  fileText = fileText.filter(item => item);
   imagesView.value.splice(index, 1);
 }
 
 function handleImageUpload(event) {
+  console.log("tập đếm số file", event.target.files)
+  imageStore.upLoadImage(event.target.files);
+  fileText.push(imageStore.image)
   const files = event.target.files;
-
   if (files.length === 0) return;
   
   if (product.images.length >= MAX_IMAGES) {
@@ -162,11 +167,9 @@ function handleImageUpload(event) {
 
   const remainingSlots = MAX_IMAGES - product.images.length;
   const filesToUpload = Math.min(files.length, remainingSlots);
-
   for (let i = 0; i < filesToUpload; i++) {
     const file = files[i];
     product.images.push(file);
-
     // Tạo URL dữ liệu cho ảnh để hiển thị trong giao diện
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -178,25 +181,11 @@ function handleImageUpload(event) {
 }
 
 const handleClick = async() => {
-  product.images.map(image => {
-    if (typeof image === 'string') {
-      imgUrl.push(image)
-    } else if (image instanceof File || image instanceof Blob) {
-      imgFile.push(image)
-    } 
-  })
+  console.log("lay ra",fileText )
   product.images = []
-  product.images = imgFile
-  product.images_text = imgUrl
-//   console.log("category", category)
-//   product.categoryIds = productStore.product.categories.map((category) => {
-//     console.log("category", category)
-//     return category;
-// });
-
+  product.images = fileText
+  console.log("fileText",fileText)
    productStore.updateProduct(product,id.value);
-    imgFile.length = 0; 
-    imgUrl.length = 0; 
 };
 
 onMounted(async () => {
@@ -208,10 +197,8 @@ onMounted(async () => {
       product.categoryIds = productStore.product.categories.map((category) => {
     return category.id;})
 
-    // defaultCategory = productStore.product.categories.map((category) => (
-    //     category.id,
-    // ));
-
+    // newImgFIle = [...productStore.product.images];
+    fileText = [...productStore.product.images];
     imagesView.value = [...productStore.product.images];
     product.images = productStore.product.images
     // product.categoryIds = productStore.product.categories.map((category) => category.id);

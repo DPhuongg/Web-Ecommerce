@@ -69,7 +69,7 @@
       <template v-else-if="column.key === 'action'">
         <span class="flex">
             <a-divider type="vertical" />
-            <ModalEditProductItem :idProductItem="record.id">
+            <ModalEditProductItem :idProductItem="record.id" :attributeProp="attributeProductStore">
             </ModalEditProductItem>
             <a-divider type="vertical" />
             <a href="#" @click.prevent="deleteItem(record.id)">
@@ -97,18 +97,6 @@ import { useAttributeValuesStore } from '@/stores/attributeValuesStore';
 import {useProductItemStore} from '@/stores/productItemStore';
 import Modal from '@/components/modal/ModalProductItem.vue';
 import ModalEditProductItem from '@/components/modal/ModalEditProductItem.vue';
-// import { useModalStore } from '@/utils/ModalStore';
-// import { eventBusProductItem } from '@/utils/eventBusHeader.js'; 
-
-// const modalStore = useModalStore();
-
-// const handleEditClick = (id) => {
-//   modalStore.showModal(id); // Lưu ID vào store và hiển thị modal
-// };
-// import { useModalStore } from '@/utils/ModalStore';
-// import { ModalProvider } from '@/utils/ModalStore';
-
-// const store = useModalStore();
 const productStore = useProductStore();
 const attributeProductStore = useAttributeProductStore();
 const attributeValuesStore = useAttributeValuesStore();
@@ -262,12 +250,11 @@ const deleteItem = async (id) => {
 };
 
 
-
-
 const deleteAttribute = async (id) => {
     await attributeProductStore.deleteAttributeProduct(id);
+    await productStore.fetchProduct(route.params.id);
+    attributeValue.attribute = productStore.product.attribute_and_value;
     productItem.productItems  = productItemStore.productItems
-    
 };
 
 onMounted(async () => {
@@ -291,4 +278,3 @@ onMounted(async () => {
 
 @import './productItem.scss';
 </style>
-

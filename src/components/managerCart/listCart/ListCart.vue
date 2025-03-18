@@ -1,4 +1,4 @@
-<template>
+<template class="bg-[#F8F9FD]">
   <div class="">
     <div class="container">
       <div class="flex items-center pt-8">
@@ -9,7 +9,7 @@
   </div>
 
   <!--  :data-source="cartData.dataSource"-->
-  <div class="mt-[30px] mb-[40px]">
+  <div class="mt-[30px] mb-[40px] ">
     <div class="cart container">
       <a-table
         :columns="columns"

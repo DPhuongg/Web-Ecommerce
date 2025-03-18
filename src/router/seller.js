@@ -118,7 +118,17 @@ const seller = [
         name: 'voucher-update',
         component: () => import('../components/voucher/voucherSeller/updateVoucher/UpdateVoucher.vue'),
         props: (route) => ({ id: route.params.id })
-      }
+      },
+      {
+        path: 'list-inventory',
+        name: 'menu-12',
+        component: () => import('../components/inventory/listInventory/ListInventory.vue')
+      },
+      {
+        path: 'list-order',
+        name: 'menu-8',
+        component: () => import('../components/order/listOrder/ListOrder.vue')
+      },
     ]
   }
 ];
